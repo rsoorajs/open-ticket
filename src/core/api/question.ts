@@ -11,16 +11,12 @@ import * as api from "@open-discord-bots/framework/api"
  * Questions are not stored in the database and will be parsed from the config every startup.
  */
 export class ODQuestionManager extends api.ODManager<ODQuestion> {
-    /**A reference to the Open Ticket debugger. */
-    #debug: api.ODDebugger
-
     constructor(debug:api.ODDebugger){
         super(debug,"question")
-        this.#debug = debug
     }
     
     add(data:ODQuestion, overwrite?:boolean): boolean {
-        data.useDebug(this.#debug,"question data")
+        data.useDebug(this.debug,"question data")
         return super.add(data,overwrite)
     }
 }
@@ -103,20 +99,20 @@ export class ODQuestion extends api.ODManager<ODQuestionData<api.ODValidJsonType
  */
 export class ODQuestionData<DataType extends api.ODValidJsonType> extends api.ODManagerData {
     /**The value of this property. */
-    #value: DataType
+    private rawValue: DataType
 
     constructor(id:api.ODValidId, value:DataType){
         super(id)
-        this.#value = value
+        this.rawValue = value
     }
 
     /**The value of this property. */
     set value(value:DataType){
-        this.#value = value
+        this.rawValue = value
         this._change()
     }
     get value(): DataType {
-        return this.#value
+        return this.rawValue
     }
     /**Refresh the database. Is only required to be used when updating `ODQuestionData` with an object/array as value. */
     refreshDatabase(){

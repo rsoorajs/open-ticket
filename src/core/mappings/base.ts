@@ -15,6 +15,10 @@ export interface ODVersionManagerIdMappings extends api.ODVersionManagerIdConstr
     "opendiscord:livestatus":api.ODVersion
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedVersionManager `class
  * A special class with types for the Open Ticket `ODVersionManager` class.
  */

@@ -19,6 +19,10 @@ export interface ODPluginClassManagerIdMappings extends api.ODPluginClassManager
     //"opendiscord:example-plugin":any
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedPluginManager `class
  * A special class with types for the Open Ticket `ODPluginManager` class.
  */

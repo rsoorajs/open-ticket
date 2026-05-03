@@ -14,31 +14,28 @@ import * as discord from "discord.js"
  */
 export class ODTicketManager extends api.ODManager<ODTicket> {
     /**A reference to the main server of the bot */
-    #guild: discord.Guild|null = null
+    private guild: discord.Guild|null = null
     /**A reference to the Open Ticket client manager. */
-    #client: api.ODClientManager
-    /**A reference to the Open Ticket debugger. */
-    #debug: api.ODDebugger
+    private client: api.ODClientManager
 
     constructor(debug:api.ODDebugger, client:api.ODClientManager){
         super(debug,"ticket")
-        this.#debug = debug
-        this.#client = client
+        this.client = client
     }
     
     add(data:ODTicket, overwrite?:boolean): boolean {
-        data.useDebug(this.#debug,"ticket data")
+        data.useDebug(this.debug,"ticket data")
         return super.add(data,overwrite)
     }
     /**Use a specific guild in this class for fetching the channel*/
     useGuild(guild:discord.Guild|null){
-        this.#guild = guild
+        this.guild = guild
     }
     /**Get the discord channel for a specific ticket. */
     async getTicketChannel(ticket:ODTicket): Promise<discord.GuildTextBasedChannel|null> {
-        if (!this.#guild) return null
+        if (!this.guild) return null
         try {
-            const channel = await this.#guild.channels.fetch(ticket.id.value)
+            const channel = await this.guild.channels.fetch(ticket.id.value)
             if (!channel || !channel.isTextBased()) return null
             return channel
         }catch{
@@ -48,7 +45,7 @@ export class ODTicketManager extends api.ODManager<ODTicket> {
     /**Get the main ticket message of a ticket channel when found. */
     async getTicketMessage(ticket:ODTicket): Promise<discord.Message<true>|null> {
         const msgId = ticket.get("opendiscord:ticket-message").value
-        if (!this.#guild || !msgId) return null
+        if (!this.guild || !msgId) return null
         try {
             const channel = await this.getTicketChannel(ticket)
             if (!channel) return null
@@ -59,34 +56,34 @@ export class ODTicketManager extends api.ODManager<ODTicket> {
     }
     /**Shortcut for getting a discord.js user within a ticket. */
     async getTicketUser(ticket:ODTicket, user:"creator"|"closer"|"claimer"|"pinner"): Promise<discord.User|null> {
-        if (!this.#guild) return null
+        if (!this.guild) return null
         try {
             if (user == "creator"){
                 const creatorId = ticket.get("opendiscord:opened-by").value
                 if (!creatorId) return null
-                else return (await this.#guild.client.users.fetch(creatorId))
+                else return (await this.guild.client.users.fetch(creatorId))
 
             }else if (user == "closer"){
                 const closerId = ticket.get("opendiscord:closed-by").value
                 if (!closerId) return null
-                else return (await this.#guild.client.users.fetch(closerId))
+                else return (await this.guild.client.users.fetch(closerId))
 
             }else if (user == "claimer"){
                 const claimerId = ticket.get("opendiscord:claimed-by").value
                 if (!claimerId) return null
-                else return (await this.#guild.client.users.fetch(claimerId))
+                else return (await this.guild.client.users.fetch(claimerId))
                 
             }else if (user == "pinner"){
                 const pinnerId = ticket.get("opendiscord:pinned-by").value
                 if (!pinnerId) return null
-                else return (await this.#guild.client.users.fetch(pinnerId))
+                else return (await this.guild.client.users.fetch(pinnerId))
                 
             }else return null
         }catch {return null}
     }
     /**Shortcut for getting all users that are able to view a ticket. */
     async getAllTicketParticipants(ticket:ODTicket): Promise<{user:discord.User,role:"creator"|"participant"|"admin"}[]|null> {
-        if (!this.#guild) return null
+        if (!this.guild) return null
         const final: {user:discord.User,role:"creator"|"participant"|"admin"}[] = []
         const channel = await this.getTicketChannel(ticket)
         if (!channel) return null
@@ -94,7 +91,7 @@ export class ODTicketManager extends api.ODManager<ODTicket> {
         //add creator
         const creatorId = ticket.get("opendiscord:opened-by").value
         if (creatorId){
-            const creator = await this.#client.fetchUser(creatorId)
+            const creator = await this.client.fetchUser(creatorId)
             if (creator) final.push({user:creator,role:"creator"})
         }
 
@@ -102,7 +99,7 @@ export class ODTicketManager extends api.ODManager<ODTicket> {
         const participants = ticket.get("opendiscord:participants").value.filter((p) => p.type == "user")
         for (const p of participants){
             if (!final.find((u) => u.user.id == p.id)){
-                const participant = await this.#client.fetchUser(p.id)
+                const participant = await this.client.fetchUser(p.id)
                 if (participant) final.push({user:participant,role:"participant"})
             }
         }
@@ -110,7 +107,7 @@ export class ODTicketManager extends api.ODManager<ODTicket> {
         //add admin roles
         const roles = ticket.get("opendiscord:participants").value.filter((p) => p.type == "role")
         for (const r of roles){
-            const role = await this.#client.fetchGuildRole(channel.guild,r.id)
+            const role = await this.client.fetchGuildRole(channel.guild,r.id)
             if (role){
                 role.members.forEach((member) => {
                     if (final.find((u) => u.user.id == member.id)) return
@@ -201,25 +198,25 @@ export interface ODTicketIds {
 export class ODTicket extends api.ODManager<ODTicketData<api.ODValidJsonType>> {
     /**The id of this ticket. (discord channel id) */
     id:api.ODId
-    /**The option related to this ticket. */
-    #option: ODTicketOption
+    /**The option this ticket is made of. */
+    private rawOption: ODTicketOption
 
     constructor(id:api.ODValidId, option:ODTicketOption, data:ODTicketData<api.ODValidJsonType>[]){
         super()
         this.id = new api.ODId(id)
-        this.#option = option
+        this.rawOption = option
         data.forEach((data) => {
             this.add(data)
         })
     }
 
-    /**The option related to this ticket. */
+    /**The option this ticket is made of. */
     set option(option:ODTicketOption){
-        this.#option = option
+        this.rawOption = option
         this._change()
     }
     get option(){
-        return this.#option
+        return this.rawOption
     }
     
     /**Convert this ticket to a JSON object for storing this ticket in the database. */
@@ -275,20 +272,20 @@ export class ODTicket extends api.ODManager<ODTicketData<api.ODValidJsonType>> {
  */
 export class ODTicketData<DataType extends api.ODValidJsonType> extends api.ODManagerData {
     /**The value of this property. */
-    #value: DataType
+    private rawValue: DataType
 
     constructor(id:api.ODValidId, value:DataType){
         super(id)
-        this.#value = value
+        this.rawValue = value
     }
 
     /**The value of this property. */
     set value(value:DataType){
-        this.#value = value
+        this.rawValue = value
         this._change()
     }
     get value(): DataType {
-        return this.#value
+        return this.rawValue
     }
     /**Refresh the database. Is only required to be used when updating `ODTicketData` with an object/array as value. */
     refreshDatabase(){

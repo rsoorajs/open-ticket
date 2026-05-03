@@ -88,6 +88,10 @@ export interface ODContextMenuManagerIdMappings extends api.ODContextMenuManager
     //"opendiscord:test-menu":ODContextMenu
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedClientManager `class
  * A special class with types for the Open Ticket `ODClientManager` class.
  */

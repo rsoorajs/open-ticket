@@ -12,16 +12,12 @@ import { ODPanelsJsonConfig_PanelEmbedSettings } from "../mappings/config.js"
  * Panels are not stored in the database and will be parsed from the config every startup.
  */
 export class ODPanelManager extends api.ODManager<ODPanel> {
-    /**A reference to the Open Ticket debugger. */
-    #debug: api.ODDebugger
-
     constructor(debug:api.ODDebugger){
         super(debug,"option")
-        this.#debug = debug
     }
     
     add(data:ODPanel, overwrite?:boolean): boolean {
-        data.useDebug(this.#debug,"option data")
+        data.useDebug(this.debug,"option data")
         return super.add(data,overwrite)
     }
 }
@@ -141,20 +137,20 @@ export class ODPanel extends api.ODManager<ODPanelData<api.ODValidJsonType>> {
  */
 export class ODPanelData<DataType extends api.ODValidJsonType> extends api.ODManagerData {
     /**The value of this property. */
-    #value: DataType
+    private rawValue: DataType
 
     constructor(id:api.ODValidId, value:DataType){
         super(id)
-        this.#value = value
+        this.rawValue = value
     }
 
     /**The value of this property. */
     set value(value:DataType){
-        this.#value = value
+        this.rawValue = value
         this._change()
     }
     get value(): DataType {
-        return this.#value
+        return this.rawValue
     }
     /**Refresh the database. Is only required to be used when updating `ODPanelData` with an object/array as value. */
     refreshDatabase(){

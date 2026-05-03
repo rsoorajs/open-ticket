@@ -17,36 +17,6 @@ export interface ODDatabaseManagerIdMappings extends api.ODDatabaseManagerIdCons
     "opendiscord:options":ODOptionsDatabase,
 }
 
-/**## ODMappedDatabaseManager `class
- * A special class with types for the Open Ticket `ODDatabaseManager` class.
- */
-export class ODMappedDatabaseManager extends api.ODDatabaseManager<ODDatabaseManagerIdMappings> {}
-
-/**## ODGlobalDatabase `class
- * A special class with types for the Open Ticket `database/global.json` database file
- */
-export class ODGlobalDatabase extends api.ODFormattedJsonDatabase<ODGlobalDatabaseIdMappings> {}
-
-/**## ODStatsDatabase `class
- * A special class with types for the Open Ticket `database/stats.json` database file
- */
-export class ODStatsDatabase extends api.ODFormattedJsonDatabase {}
-
-/**## ODTicketsDatabase `class
- * A special class with types for the Open Ticket `database/tickets.json` database file
- */
-export class ODTicketsDatabase extends api.ODFormattedJsonDatabase<ODTicketsDatabaseIdMappings> {}
-
-/**## ODUsersDatabase `class
- * A special class with types for the Open Ticket `database/users.json` database file
- */
-export class ODUsersDatabase extends api.ODFormattedJsonDatabase<ODUsersDatabaseIdMappings> {}
-
-/**## ODOptionsDatabase `class
- * A special class with types for the Open Ticket `database/options.json` database file
- */
-export class ODOptionsDatabase extends api.ODFormattedJsonDatabase<ODOptionsDatabaseIdMappings> {}
-
 /////////////////////////////////////////
 // DATABASE MAPPINGS, CATEGORIES & TYPES
 /////////////////////////////////////////
@@ -86,3 +56,37 @@ export interface ODUsersDatabaseIdMappings extends api.ODDatabaseIdConstraint {
 export interface ODOptionsDatabaseIdMappings extends api.ODDatabaseIdConstraint {
     "opendiscord:used-option":ODOptionJson
 }
+
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
+/**## ODMappedDatabaseManager `class
+ * A special class with types for the Open Ticket `ODDatabaseManager` class.
+ */
+export class ODMappedDatabaseManager extends api.ODDatabaseManager<ODDatabaseManagerIdMappings> {}
+
+/**## ODGlobalDatabase `class
+ * A special class with types for the Open Ticket `database/global.json` database file
+ */
+export class ODGlobalDatabase extends api.ODFormattedJsonDatabase<ODGlobalDatabaseIdMappings> {}
+
+/**## ODStatsDatabase `class
+ * A special class with types for the Open Ticket `database/stats.json` database file
+ */
+export class ODStatsDatabase extends api.ODFormattedJsonDatabase {}
+
+/**## ODTicketsDatabase `class
+ * A special class with types for the Open Ticket `database/tickets.json` database file
+ */
+export class ODTicketsDatabase extends api.ODFormattedJsonDatabase<ODTicketsDatabaseIdMappings> {}
+
+/**## ODUsersDatabase `class
+ * A special class with types for the Open Ticket `database/users.json` database file
+ */
+export class ODUsersDatabase extends api.ODFormattedJsonDatabase<ODUsersDatabaseIdMappings> {}
+
+/**## ODOptionsDatabase `class
+ * A special class with types for the Open Ticket `database/options.json` database file
+ */
+export class ODOptionsDatabase extends api.ODFormattedJsonDatabase<ODOptionsDatabaseIdMappings> {}

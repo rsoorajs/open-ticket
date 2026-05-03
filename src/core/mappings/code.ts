@@ -26,6 +26,10 @@ export interface ODCodeManagerIdMappings extends api.ODCodeManagerIdConstraint {
     "opendiscord:ticket-anti-busy":api.ODCode,
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedCodeManager `class
  * A special class with types for the Open Ticket `ODCodeManager` class.
  */

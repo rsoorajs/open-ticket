@@ -11,6 +11,10 @@ export interface ODCooldownManagerIdMappings extends api.ODCooldownManagerIdCons
     //"opendiscord:cooldown":api.ODCooldown
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedCooldownManager `class
  * A special class with types for the Open Ticket `ODCooldownManager` class.
  */

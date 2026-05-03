@@ -11,6 +11,10 @@ export interface ODSessionManagerIdMappings extends api.ODSessionManagerIdConstr
     //"opendiscord:example-session":api.ODSession
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedSessionManager `class
  * A special class with types for the Open Ticket `ODSessionManager` class.
  */

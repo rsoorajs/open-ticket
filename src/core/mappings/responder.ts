@@ -103,6 +103,10 @@ export interface ODAutocompleteResponderManagerIdMappings extends api.ODAutocomp
     "opendiscord:option-id":{origin:"autocomplete",params:{},workers:"opendiscord:option-id"}
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedCommandResponderManager `class
  * A special class with types for the Open Ticket `ODCommandResponderManager` class.
  */

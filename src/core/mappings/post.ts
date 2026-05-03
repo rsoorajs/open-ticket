@@ -13,6 +13,10 @@ export interface ODPostManagerIdMappings extends api.ODPostManagerIdConstraint {
     "opendiscord:transcripts":api.ODPost<discord.GuildTextBasedChannel>|null
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedPostManager `class
  * A special class with types for the Open Ticket `ODPostManager` class.
  */

@@ -16,41 +16,6 @@ export interface ODStatisticManagerIdMappings extends api.ODStatisticManagerIdCo
     "opendiscord:messages":ODMessagesStatisticScope,
 }
 
-/**## ODMappedStatisticManager `class
- * A special class with types for the Open Ticket `ODStatisticManager` class.
- */
-export class ODMappedStatisticManager extends api.ODStatisticManager<ODStatisticManagerIdMappings> {}
-
-/**## ODGlobalStatisticScope `class
- * A special class with types for the Open Ticket `Global` statistics category/scope.
- */
-export class ODGlobalStatisticScope extends api.ODStatisticGlobalScope<ODGlobalStatisticScopeIdMappings> {}
-
-/**## ODSystemStatisticScope `class
- * A special class with types for the Open Ticket `System` statistics category/scope.
- */
-export class ODSystemStatisticScope extends api.ODStatisticGlobalScope<ODSystemStatisticScopeIdMappings> {}
-
-/**## ODUserStatisticScope `class
- * A special class with types for the Open Ticket `User` statistics category/scope.
- */
-export class ODUserStatisticScope extends api.ODStatisticScope<ODUserStatisticScopeIdMappings> {}
-
-/**## ODTicketStatisticScope `class
- * A special class with types for the Open Ticket `Ticket` statistics category/scope.
- */
-export class ODTicketStatisticScope extends api.ODStatisticScope<ODTicketStatisticScopeIdMappings> {}
-
-/**## ODParticipantsStatisticScope `class
- * A special class with types for the Open Ticket `Participants` statistics category/scope.
- */
-export class ODParticipantsStatisticScope extends api.ODStatisticScope<ODParticipantsStatisticScopeIdMappings> {}
-
-/**## ODMessagesStatisticScope `class
- * A special class with types for the Open Ticket `Messages` statistics category/scope.
- */
-export class ODMessagesStatisticScope extends api.ODStatisticScope<ODMessagesStatisticScopeIdMappings> {}
-
 /////////////////////////////////////////
 // STATISTICS MAPPINGS, CATEGORIES & TYPES
 /////////////////////////////////////////
@@ -137,3 +102,42 @@ export interface ODParticipantsStatisticScopeIdMappings extends api.ODStatisticS
 export interface ODMessagesStatisticScopeIdMappings extends api.ODStatisticScopeIdConstraint {
     "opendiscord:count":api.ODDynamicStatistic
 }
+
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
+/**## ODMappedStatisticManager `class
+ * A special class with types for the Open Ticket `ODStatisticManager` class.
+ */
+export class ODMappedStatisticManager extends api.ODStatisticManager<ODStatisticManagerIdMappings> {}
+
+/**## ODGlobalStatisticScope `class
+ * A special class with types for the Open Ticket `Global` statistics category/scope.
+ */
+export class ODGlobalStatisticScope extends api.ODStatisticGlobalScope<ODGlobalStatisticScopeIdMappings> {}
+
+/**## ODSystemStatisticScope `class
+ * A special class with types for the Open Ticket `System` statistics category/scope.
+ */
+export class ODSystemStatisticScope extends api.ODStatisticGlobalScope<ODSystemStatisticScopeIdMappings> {}
+
+/**## ODUserStatisticScope `class
+ * A special class with types for the Open Ticket `User` statistics category/scope.
+ */
+export class ODUserStatisticScope extends api.ODStatisticScope<ODUserStatisticScopeIdMappings> {}
+
+/**## ODTicketStatisticScope `class
+ * A special class with types for the Open Ticket `Ticket` statistics category/scope.
+ */
+export class ODTicketStatisticScope extends api.ODStatisticScope<ODTicketStatisticScopeIdMappings> {}
+
+/**## ODParticipantsStatisticScope `class
+ * A special class with types for the Open Ticket `Participants` statistics category/scope.
+ */
+export class ODParticipantsStatisticScope extends api.ODStatisticScope<ODParticipantsStatisticScopeIdMappings> {}
+
+/**## ODMessagesStatisticScope `class
+ * A special class with types for the Open Ticket `Messages` statistics category/scope.
+ */
+export class ODMessagesStatisticScope extends api.ODStatisticScope<ODMessagesStatisticScopeIdMappings> {}

@@ -62,7 +62,7 @@ export class ODOpenTicketMain extends api.ODMain {
         const debug = new api.ODDebugger(console)
         const client = new api.ODMappedClientManager(debug)
         const livestatus = new api.ODMappedLiveStatusManager(debug,console)
-        const permissions = new api.ODMappedPermissionManager(debug,client)
+        const permissions = new api.ODMappedPermissionManager(debug,client,true)
 
         super({
             versions:new api.ODMappedVersionManager(),

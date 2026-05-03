@@ -26,6 +26,10 @@ export interface ODFlagManagerIdMappings extends api.ODFlagManagerIdConstraint {
     "opendiscord:cli":api.ODFlag,
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedFlagManager `class
  * A special class with types for the Open Ticket `ODFlagManager` class.
  */

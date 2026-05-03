@@ -29,6 +29,10 @@ export interface ODProgressBarRendererManagerIdMappings extends api.ODProgressBa
     "opendiscord:time-min-renderer":api.ODDefaultProgressBarRenderer,
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedProgressBarManager `class
  * A special class with types for the Open Ticket `ODProgressBarManager` class.
  */

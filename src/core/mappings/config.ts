@@ -37,36 +37,6 @@ export interface ODConfigManagerIdMappings extends api.ODConfigManagerIdConstrai
     "opendiscord:transcripts":ODTranscriptsJsonConfig
 }
 
-/**## ODMappedConfigManager `class
- * A special class with types for the Open Ticket `ODConfigManager` class.
- */
-export class ODMappedConfigManager extends api.ODConfigManager<ODConfigManagerIdMappings> {}
-
-/**## ODGeneralJsonConfig `class
- * A special class with types for the Open Ticket `config/general.json` config file
- */
-export class ODGeneralJsonConfig extends api.ODJsonConfig<ODGeneralJsonConfig_GeneralData> {}
-
-/**## ODQuestionsJsonConfig `class
- * A special class with types for the Open Ticket `config/questions.json` config file
- */
-export class ODQuestionsJsonConfig extends api.ODJsonConfig<ODQuestionsJsonConfig_QuestionsData> {}
-
-/**## ODOptionsJsonConfig `class
- * A special class with types for the Open Ticket `config/options.json` config file
- */
-export class ODOptionsJsonConfig extends api.ODJsonConfig<ODOptionsJsonConfig_OptionsData> {}
-
-/**## ODPanelsJsonConfig `class
- * A special class with types for the Open Ticket `config/panels.json` config file
- */
-export class ODPanelsJsonConfig extends api.ODJsonConfig<ODPanelsJsonConfig_PanelsData> {}
-
-/**## ODTranscriptsJsonConfig `class
- * A special class with types for the Open Ticket `config/transcripts.json` config file
- */
-export class ODTranscriptsJsonConfig extends api.ODJsonConfig<ODTranscriptsJsonConfig_TranscriptsData> {}
-
 ///////////////////////////////////////
 // CONFIG STRUCTURES, VALUES & TYPES
 // --> general.json
@@ -800,3 +770,37 @@ export interface ODTranscriptsJsonConfig_TranscriptsData {
     /**The layout of the HTML transcripts. */
     htmlTranscriptStyle:ODTranscriptsJsonConfig_TranscriptsHtmlLayout
 }
+
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
+/**## ODMappedConfigManager `class
+ * A special class with types for the Open Ticket `ODConfigManager` class.
+ */
+export class ODMappedConfigManager extends api.ODConfigManager<ODConfigManagerIdMappings> {}
+
+/**## ODGeneralJsonConfig `class
+ * A special class with types for the Open Ticket `config/general.json` config file
+ */
+export class ODGeneralJsonConfig extends api.ODJsonConfig<ODGeneralJsonConfig_GeneralData> {}
+
+/**## ODQuestionsJsonConfig `class
+ * A special class with types for the Open Ticket `config/questions.json` config file
+ */
+export class ODQuestionsJsonConfig extends api.ODJsonConfig<ODQuestionsJsonConfig_QuestionsData> {}
+
+/**## ODOptionsJsonConfig `class
+ * A special class with types for the Open Ticket `config/options.json` config file
+ */
+export class ODOptionsJsonConfig extends api.ODJsonConfig<ODOptionsJsonConfig_OptionsData> {}
+
+/**## ODPanelsJsonConfig `class
+ * A special class with types for the Open Ticket `config/panels.json` config file
+ */
+export class ODPanelsJsonConfig extends api.ODJsonConfig<ODPanelsJsonConfig_PanelsData> {}
+
+/**## ODTranscriptsJsonConfig `class
+ * A special class with types for the Open Ticket `config/transcripts.json` config file
+ */
+export class ODTranscriptsJsonConfig extends api.ODJsonConfig<ODTranscriptsJsonConfig_TranscriptsData> {}

@@ -12,16 +12,12 @@ import * as discord from "discord.js"
  * Roles are not stored in the database and will be parsed from the config every startup.
  */
 export class ODRoleManager extends api.ODManager<ODRole> {
-    /**A reference to the Open Ticket debugger. */
-    #debug: api.ODDebugger
-
     constructor(debug:api.ODDebugger){
         super(debug,"role")
-        this.#debug = debug
     }
     
     add(data:ODRole, overwrite?:boolean): boolean {
-        data.useDebug(this.#debug,"role data")
+        data.useDebug(this.debug,"role data")
         return super.add(data,overwrite)
     }
 }
@@ -130,20 +126,20 @@ export class ODRole extends api.ODManager<ODRoleData<api.ODValidJsonType>> {
  */
 export class ODRoleData<DataType extends api.ODValidJsonType> extends api.ODManagerData {
     /**The value of this property. */
-    #value: DataType
+    private rawValue: DataType
 
     constructor(id:api.ODValidId, value:DataType){
         super(id)
-        this.#value = value
+        this.rawValue = value
     }
 
     /**The value of this property. */
     set value(value:DataType){
-        this.#value = value
+        this.rawValue = value
         this._change()
     }
     get value(): DataType {
-        return this.#value
+        return this.rawValue
     }
     /**Refresh the database. Is only required to be used when updating `ODRoleData` with an object/array as value. */
     refreshDatabase(){

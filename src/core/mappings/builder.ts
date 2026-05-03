@@ -253,6 +253,10 @@ export interface ODModalManagerIdMappings extends api.ODModalManagerIdConstraint
     "opendiscord:unpin-ticket-reason":{origin:"ticket-message"|"pin-message"|"other",params:{guild:discord.Guild,channel:discord.TextBasedChannel,user:discord.User,ticket:ODTicket},workers:"opendiscord:unpin-ticket-reason"}
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedButtonManager `class
  * A special class with types for the Open Ticket `ODButtonManager` class.
  */

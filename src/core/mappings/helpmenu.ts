@@ -27,46 +27,6 @@ export interface ODHelpMenuManagerIdMappings extends api.ODHelpMenuManagerIdCons
     "opendiscord:extra":ODExtraHelpMenuCategory
 }
 
-/**## ODMappedHelpMenuManager `class
- * A special class with types for the Open Ticket `ODHelpMenuManager` class.
- */
-export class ODMappedHelpMenuManager extends api.ODHelpMenuManager<ODHelpMenuManagerIdMappings> {}
-
-/**## ODGeneralHelpMenuCategory `class
- * A special class with types for the Open Ticket `General Commands` help menu category.
- */
-export class ODGeneralHelpMenuCategory extends api.ODHelpMenuCategory<ODGeneralHelpMenuCategoryIdMappings> {}
-
-/**## ODBasicTicketHelpMenuCategory `class
- * A special class with types for the Open Ticket `Basic Ticket Commands` help menu category.
- */
-export class ODBasicTicketHelpMenuCategory extends api.ODHelpMenuCategory<ODBasicTicketHelpMenuCategoryIdMappings> {}
-
-/**## ODAdvancedTicketHelpMenuCategory `class
- * A special class with types for the Open Ticket `Advanced Ticket Commands` help menu category.
- */
-export class ODAdvancedTicketHelpMenuCategory extends api.ODHelpMenuCategory<ODAdvancedTicketHelpMenuCategoryIdMappings> {}
-
-/**## ODUserTicketHelpMenuCategory `class
- * A special class with types for the Open Ticket `User ticket Commands` help menu category.
- */
-export class ODUserTicketHelpMenuCategory extends api.ODHelpMenuCategory<ODUserTicketHelpMenuCategoryIdMappings> {}
-
-/**## ODAdminHelpMenuCategory `class
- * A special class with types for the Open Ticket `Admin Commands` help menu category.
- */
-export class ODAdminHelpMenuCategory extends api.ODHelpMenuCategory<ODAdminHelpMenuCategoryIdMappings> {}
-
-/**## ODAdvancedHelpMenuCategory `class
- * A special class with types for the Open Ticket `Advanced Commands` help menu category.
- */
-export class ODAdvancedHelpMenuCategory extends api.ODHelpMenuCategory<ODAdvancedHelpMenuCategoryIdMappings> {}
-
-/**## ODExtraHelpMenuCategory `class
- * A special class with types for the Open Ticket `Extra Commands` help menu category.
- */
-export class ODExtraHelpMenuCategory extends api.ODHelpMenuCategory<ODExtraHelpMenuCategoryIdMappings> {}
-
 /////////////////////////////////////////
 // HELP MENU MAPPINGS, CATEGORIES & TYPES
 /////////////////////////////////////////
@@ -149,3 +109,47 @@ export interface ODAdvancedHelpMenuCategoryIdMappings extends api.ODHelpMenuCate
 export interface ODExtraHelpMenuCategoryIdMappings extends api.ODHelpMenuCategoryIdConstraint {
     //"opendiscord:help-component":api.ODHelpMenuCommandComponent
 }
+
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
+/**## ODMappedHelpMenuManager `class
+ * A special class with types for the Open Ticket `ODHelpMenuManager` class.
+ */
+export class ODMappedHelpMenuManager extends api.ODHelpMenuManager<ODHelpMenuManagerIdMappings> {}
+
+/**## ODGeneralHelpMenuCategory `class
+ * A special class with types for the Open Ticket `General Commands` help menu category.
+ */
+export class ODGeneralHelpMenuCategory extends api.ODHelpMenuCategory<ODGeneralHelpMenuCategoryIdMappings> {}
+
+/**## ODBasicTicketHelpMenuCategory `class
+ * A special class with types for the Open Ticket `Basic Ticket Commands` help menu category.
+ */
+export class ODBasicTicketHelpMenuCategory extends api.ODHelpMenuCategory<ODBasicTicketHelpMenuCategoryIdMappings> {}
+
+/**## ODAdvancedTicketHelpMenuCategory `class
+ * A special class with types for the Open Ticket `Advanced Ticket Commands` help menu category.
+ */
+export class ODAdvancedTicketHelpMenuCategory extends api.ODHelpMenuCategory<ODAdvancedTicketHelpMenuCategoryIdMappings> {}
+
+/**## ODUserTicketHelpMenuCategory `class
+ * A special class with types for the Open Ticket `User ticket Commands` help menu category.
+ */
+export class ODUserTicketHelpMenuCategory extends api.ODHelpMenuCategory<ODUserTicketHelpMenuCategoryIdMappings> {}
+
+/**## ODAdminHelpMenuCategory `class
+ * A special class with types for the Open Ticket `Admin Commands` help menu category.
+ */
+export class ODAdminHelpMenuCategory extends api.ODHelpMenuCategory<ODAdminHelpMenuCategoryIdMappings> {}
+
+/**## ODAdvancedHelpMenuCategory `class
+ * A special class with types for the Open Ticket `Advanced Commands` help menu category.
+ */
+export class ODAdvancedHelpMenuCategory extends api.ODHelpMenuCategory<ODAdvancedHelpMenuCategoryIdMappings> {}
+
+/**## ODExtraHelpMenuCategory `class
+ * A special class with types for the Open Ticket `Extra Commands` help menu category.
+ */
+export class ODExtraHelpMenuCategory extends api.ODHelpMenuCategory<ODExtraHelpMenuCategoryIdMappings> {}

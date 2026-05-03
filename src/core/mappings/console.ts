@@ -11,6 +11,10 @@ export interface ODLiveStatusManagerIdMappings extends api.ODLiveStatusManagerId
     "opendiscord:default-djdj-dev":api.ODLiveStatusUrlSource
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedLiveStatusManager `class
  * A special class with types for the Open Ticket `ODLiveStatusManager` class.
  */

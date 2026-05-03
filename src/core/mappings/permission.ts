@@ -11,11 +11,6 @@ export interface ODPermissionManagerIdMappings extends api.ODPermissionManagerId
     //"opendiscord:test-permission":api.ODPermission
 }
 
-/**## ODMappedPermissionManager `class
- * A special class with types for the Open Ticket `ODPermissionManager` class.
- */
-export class ODMappedPermissionManager extends api.ODPermissionManager<ODPermissionManagerIdMappings> {}
-
 /**## ODPermissionEmbedType `type`
  * A collection of all types available in the `opendiscord:no-permissions` embed.
  */
@@ -28,3 +23,12 @@ export type ODPermissionEmbedType = (
     "member"|
     "discord-administrator"
 )
+
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
+/**## ODMappedPermissionManager `class
+ * A special class with types for the Open Ticket `ODPermissionManager` class.
+ */
+export class ODMappedPermissionManager extends api.ODPermissionManager<ODPermissionManagerIdMappings> {}

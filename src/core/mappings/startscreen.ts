@@ -18,6 +18,10 @@ export interface ODStartScreenManagerIdMappings extends api.ODStartScreenManager
     "opendiscord:logs":api.ODStartScreenCategoryComponent
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedStartScreenManager `class
  * A special class with types for the Open Ticket `ODStartScreenManager` class.
  */

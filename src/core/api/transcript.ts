@@ -30,11 +30,11 @@ export class ODTranscriptManager<IdList extends ODTranscriptManagerIdConstraint 
     /**The manager responsible for collecting all messages in a channel. */
     collector: ODTranscriptCollector
     /**Alias for the client manager. */
-    #client: api.ODClientManager
+    private client: api.ODClientManager
 
     constructor(debug:api.ODDebugger, tickets:ODTicketManager, client:api.ODClientManager, permissions:api.ODPermissionManager){
         super(debug,"transcript compiler")
-        this.#client = client
+        this.client = client
         this.collector = new ODTranscriptCollector(tickets,client,permissions)
     }
 
@@ -89,7 +89,7 @@ export interface ODTranscriptCompilerInitResult<InitData extends object|null> {
     /**When not successfull, what was the reason? This will also be shown to the user. */
     errorReason:string|null,
     /**An optional message which will be sent while the transcript is being generated. */
-    pendingMessage:api.ODMessageBuildResult|null,
+    pendingMessage:api.ODMessageBuildResult|api.ODMessageComponentBuildResult|null,
     /**An optional object containing data from the init() function which can be used in the compiler. */
     initData:InitData,
 }
@@ -119,15 +119,15 @@ export interface ODTranscriptCompilerCompileResult<Data extends object> {
  */
 export interface ODTranscriptCompilerReadyResult {
     /**The message to be sent in the specified channel in the server. */
-    channelMessage?:api.ODMessageBuildResult,
+    channelMessage?:api.ODMessageBuildResult|api.ODMessageComponentBuildResult,
     /**The message to be sent to the DM of the ticket creator. */
-    creatorDmMessage?:api.ODMessageBuildResult,
+    creatorDmMessage?:api.ODMessageBuildResult|api.ODMessageComponentBuildResult,
     /**The message to be sent to the DM of all participants. */
-    participantDmMessage?:api.ODMessageBuildResult,
+    participantDmMessage?:api.ODMessageBuildResult|api.ODMessageComponentBuildResult,
     /**The message to be sent to the DM of all admins who actively participated in the ticket. */
-    activeAdminDmMessage?:api.ODMessageBuildResult,
+    activeAdminDmMessage?:api.ODMessageBuildResult|api.ODMessageComponentBuildResult,
     /**The message to be sent to the DM of all admins who were assigned to this ticket. */
-    everyAdminDmMessage?:api.ODMessageBuildResult
+    everyAdminDmMessage?:api.ODMessageBuildResult|api.ODMessageComponentBuildResult
 }
 
 /**## ODTranscriptCompiler `class`
@@ -162,22 +162,22 @@ export class ODTranscriptCompiler<Data extends object,InitData extends (object|n
  */
 export class ODTranscriptCollector {
     /**Alias for the ticket manager. */
-    #tickets: ODTicketManager
+    private tickets: ODTicketManager
     /**Alias for the client manager. */
-    #client: api.ODClientManager
+    private client: api.ODClientManager
     /**Alias for the permissions manager. */
-    #permissions: api.ODPermissionManager
+    private permissions: api.ODPermissionManager
 
     constructor(tickets:ODTicketManager,client:api.ODClientManager,permissions:api.ODPermissionManager){
-        this.#tickets = tickets
-        this.#client = client
-        this.#permissions = permissions
+        this.tickets = tickets
+        this.client = client
+        this.permissions = permissions
     }
     
     /**Collect all messages from a given ticket channel. It may not include all messages depending on the ratelimit. */
     async collectAllMessages(ticket:ODTicket, include?:ODTranscriptCollectorIncludeSettings): Promise<discord.Message<true>[]|null> {
         const newInclude: ODTranscriptCollectorIncludeSettings = include ?? {users:true,bots:true,client:true}
-        const channel = await this.#tickets.getTicketChannel(ticket)
+        const channel = await this.tickets.getTicketChannel(ticket)
         if (!channel) return null
         
         const final: discord.Message<true>[] = []
@@ -213,7 +213,7 @@ export class ODTranscriptCollector {
             const {guild,channel,id,createdTimestamp} = msg
 
             //create message author
-            const author = this.#handleUserData(msg.author,msg.member)
+            const author = this.handleUserData(msg.author,msg.member)
 
             //create message type
             let type: ODTranscriptMessageType = "default"
@@ -269,8 +269,8 @@ export class ODTranscriptCollector {
                             disabled:component.disabled,
                             type:"button",
                             label:component.label,
-                            emoji:this.#handleComponentEmoji(msg,component.emoji),
-                            color:this.#handleButtonComponentStyle(component.style),
+                            emoji:this.handleComponentEmoji(msg,component.emoji),
+                            color:this.handleButtonComponentStyle(component.style),
                             mode:(component.style == discord.ButtonStyle.Link) ? "url" : "button",
                             url:component.url
                         })
@@ -285,7 +285,7 @@ export class ODTranscriptCollector {
                                     id:option.value,
                                     label:option.label,
                                     description:option.description ?? null,
-                                    emoji:this.#handleComponentEmoji(msg,option.emoji ?? null)
+                                    emoji:this.handleComponentEmoji(msg,option.emoji ?? null)
                                 }
                             })
                         })
@@ -303,7 +303,7 @@ export class ODTranscriptCollector {
                     if (replyChannel && !replyChannel.isDMBased() && replyChannel.isTextBased()){
                         const replyMessage = await replyChannel.messages.fetch(msg.reference.messageId)
                         if (replyMessage){
-                            const replyUser = this.#handleUserData(replyMessage.author,replyMessage.member)
+                            const replyUser = this.handleUserData(replyMessage.author,replyMessage.member)
                             
                             reply = {
                                 type:"message",
@@ -320,7 +320,7 @@ export class ODTranscriptCollector {
             }else if (msg.interactionMetadata){
                 try{
                     //get slash command name from undocumented property in discord REST API
-                    const restMsg = await this.#client.rest.get(discord.Routes.channelMessage(msg.channelId,msg.id)) as discord.APIMessage & {interaction_metadata:{name:string}}
+                    const restMsg = await this.client.rest.get(discord.Routes.channelMessage(msg.channelId,msg.id)) as discord.APIMessage & {interaction_metadata:{name:string}}
                     const commandName = restMsg.interaction_metadata.name ?? "unknown-command"
                     //slash command reply
                     let member: discord.GuildMember|null = null
@@ -330,7 +330,7 @@ export class ODTranscriptCollector {
                     reply = {
                         type:"interaction",
                         name:commandName,
-                        user:this.#handleUserData(msg.interactionMetadata.user,member)
+                        user:this.handleUserData(msg.interactionMetadata.user,member)
                     }
                 }catch(err){
                     process.emit("uncaughtException",err)
@@ -395,7 +395,7 @@ export class ODTranscriptCollector {
         else return {size:Math.round(bytes/(1024*1024*1024*1024)),unit:"TB"}
     }
     /**Get the `ODTranscriptEmojiData` from a discord.js component emoji. */
-    #handleComponentEmoji(message:discord.Message<true>, rawEmoji:discord.APIMessageComponentEmoji|null): ODTranscriptEmojiData|null {
+    private handleComponentEmoji(message:discord.Message<true>, rawEmoji:discord.APIMessageComponentEmoji|null): ODTranscriptEmojiData|null {
         if (!rawEmoji) return null
         //return built-in emoji
         if (rawEmoji.name) return {
@@ -418,14 +418,14 @@ export class ODTranscriptCollector {
         }
     }
     /**Create the `ODValidButtonColor` from the discord.js button style. */
-    #handleButtonComponentStyle(style:discord.ButtonStyle): api.ODValidButtonColor {
+    private handleButtonComponentStyle(style:discord.ButtonStyle): api.ODValidButtonColor {
         if (style == discord.ButtonStyle.Danger) return "red"
         else if (style == discord.ButtonStyle.Success) return "green"
         else if (style == discord.ButtonStyle.Primary) return "blue"
         else return "gray"
     }
     /**Create the `ODTranscriptUserData` from a discord.js user. */
-    #handleUserData(user:discord.User, member?:discord.GuildMember|null): ODTranscriptUserData {
+    private handleUserData(user:discord.User, member?:discord.GuildMember|null): ODTranscriptUserData {
         const userData: ODTranscriptUserData = {
             id:user.id,
             username:user.username,
@@ -450,10 +450,10 @@ export class ODTranscriptCollector {
         let adminMessages = 0
 
         for (const msg of parsedMessages){
-            if (msg.author.tag || msg.author.id == this.#client.client.user.id) continue
-            const user = await this.#client.fetchUser(msg.author.id)
+            if (msg.author.tag || msg.author.id == this.client.client.user.id) continue
+            const user = await this.client.fetchUser(msg.author.id)
             if (!user) continue
-            const isAdmin = this.#permissions.hasPermissions("support",await this.#permissions.getPermissions(user,channel,guild))
+            const isAdmin = this.permissions.hasPermissions("support",await this.permissions.getPermissions(user,channel,guild))
             if (isAdmin) adminMessages++
             else userMessages++
         }

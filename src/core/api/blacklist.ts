@@ -12,20 +12,20 @@ import * as api from "@open-discord-bots/framework/api"
  */
 export class ODBlacklist extends api.ODManagerData {
     /**The reason why this user got blacklisted. (optional) */
-    #reason: string|null
+    private rawReason: string|null
 
     constructor(id:api.ODValidId,reason:string|null){
         super(id)
-        this.#reason = reason
+        this.rawReason = reason
     }
 
     /**The reason why this user got blacklisted. (optional) */
     set reason(reason:string|null) {
-        this.#reason = reason
+        this.rawReason = reason
         this._change()
     }
     get reason(){
-        return this.#reason
+        return this.rawReason
     }
 }
 

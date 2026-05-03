@@ -129,6 +129,10 @@ export interface ODCheckerFunctionManagerIdMappings extends api.ODCheckerFunctio
     "opendiscord:dropdown-options":api.ODCheckerFunction
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedCheckerManager `class
  * A special class with types for the Open Ticket `ODCheckerManager` class.
  */

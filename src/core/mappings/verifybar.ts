@@ -27,6 +27,10 @@ export interface ODVerifyBarManagerIdMappings extends api.ODVerifyBarManagerIdCo
     "opendiscord:delete-ticket-autoclose-message":{successWorkerIds:"opendiscord:permissions"|"opendiscord:delete-ticket",failureWorkerIds:"opendiscord:back-to-autoclose-message"}
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedVerifyBarManager `class
  * A special class with types for the Open Ticket `ODVerifyBarManager` class.
  */

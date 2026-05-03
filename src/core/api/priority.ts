@@ -30,12 +30,8 @@ export interface ODPriorityManagerIdMappings extends ODPriorityManagerIdConstrai
  * Priorities levels can be changed/updated/translated by plugins to allow for more customisability.
  */
 export class ODPriorityManager<IdList extends ODPriorityManagerIdConstraint = ODPriorityManagerIdConstraint> extends api.ODManager<ODPriorityLevel> {
-    /**A reference to the Open Ticket debugger. */
-    #debug: api.ODDebugger
-
     constructor(debug:api.ODDebugger){
         super(debug,"priority")
-        this.#debug = debug
     }
 
     /**Get an `ODPriorityLevel` from the priority level value. Returns a dummy value when the level doesn't exist. */

@@ -37,22 +37,21 @@ export const loadCommandErrorHandlingCode = async () => {
 
         //responder timeout
         opendiscord.responders.commands.setTimeoutErrorCallback(async (instance,source) => {
-            instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error-responder-timeout").build(source,{guild:instance.guild,channel:instance.channel,user:instance.user}))
+            return await instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error-responder-timeout").build(source,{guild:instance.guild,channel:instance.channel,user:instance.user}))
         },null)
         opendiscord.responders.buttons.setTimeoutErrorCallback(async (instance,source) => {
-            instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error-responder-timeout").build(source,{guild:instance.guild,channel:instance.channel,user:instance.user}))
+            return await instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error-responder-timeout").build(source,{guild:instance.guild,channel:instance.channel,user:instance.user}))
         },null)
         opendiscord.responders.dropdowns.setTimeoutErrorCallback(async (instance,source) => {
-            instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error-responder-timeout").build(source,{guild:instance.guild,channel:instance.channel,user:instance.user}))
+            return await instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error-responder-timeout").build(source,{guild:instance.guild,channel:instance.channel,user:instance.user}))
         },null)
         opendiscord.responders.modals.setTimeoutErrorCallback(async (instance,source) => {
             if (!instance.channel){
-                instance.reply({id:new api.ODId("looks-like-we-got-an-error-here"), ephemeral:true, message:{
+                return await instance.reply({id:new api.ODId("opendiscord:unknown-error"), ephemeral:true, message:{
                     content:":x: **Something went wrong while replying to this modal!**"
                 }})
-                return
             }
-            instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error-responder-timeout").build(source,{guild:instance.guild,channel:instance.channel,user:instance.user}))
+            return await instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error-responder-timeout").build(source,{guild:instance.guild,channel:instance.channel,user:instance.user}))
         },null)
     }))
 }

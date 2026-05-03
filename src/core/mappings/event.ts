@@ -333,6 +333,10 @@ export interface ODEventManagerIdMappings extends api.ODEventManagerIdConstraint
     "onReadyForUsage": api.ODEvent<() => api.ODPromiseVoid>
 }
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedEventManager `class
  * A special class with types for the Open Ticket `ODEventManager` class.
  */

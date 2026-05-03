@@ -137,7 +137,7 @@ export const registerActions = async () => {
                         if (transcriptConfig.data.general.enableChannel && channelMessage){
                             if (instance.pendingMessage && instance.pendingMessage.message && instance.pendingMessage.success){
                                 //edit "pending" message to be the "ready" message
-                                instance.pendingMessage.message.edit(channelMessage.message)
+                                instance.pendingMessage.message.edit(utilities.getMessageFromBuildResult(channelMessage,"message"))
                             }else{
                                 //send ready message to channel
                                 const post = opendiscord.posts.get("opendiscord:transcripts")

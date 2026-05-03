@@ -622,6 +622,10 @@ export type ODLanguageManagerTranslationIdMappings = (
     "priorities.none"
 )
 
+/////////////////////////////
+////// MAPPED MANAGERS //////
+/////////////////////////////
+
 /**## ODMappedLanguageManager `class
  * A special class with types for the Open Ticket `ODLanguageManager` class.
  */
