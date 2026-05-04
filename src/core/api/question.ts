@@ -3,6 +3,39 @@
 ///////////////////////////////////////
 import * as api from "@open-discord-bots/framework/api"
 
+/**## ODQuestionIdConstraint `type`
+ * The constraint/layout for id mappings/interfaces of the `ODQuestion` class.
+ */
+export type ODQuestionIdConstraint = Record<string,ODQuestionData<api.ODValidJsonType>>
+
+/**## ODShortQuestionIdMappings `interface`
+ * A list of all available IDs in the default `ODShortQuestion` class in `opendiscord`.
+ * It's used to generate typescript declarations for this class.
+ */
+export interface ODShortQuestionIdMappings extends ODQuestionIdConstraint {
+    "opendiscord:name":ODQuestionData<string>,
+    "opendiscord:required":ODQuestionData<boolean>,
+    "opendiscord:placeholder":ODQuestionData<string>,
+    
+    "opendiscord:length-enabled":ODQuestionData<boolean>,
+    "opendiscord:length-min":ODQuestionData<number>,
+    "opendiscord:length-max":ODQuestionData<number>
+}
+
+/**## ODParagraphQuestionIdMappings `interface`
+ * A list of all available IDs in the default `ODParagraphQuestion` class in `opendiscord`.
+ * It's used to generate typescript declarations for this class.
+ */
+export interface ODParagraphQuestionIdMappings extends ODQuestionIdConstraint {
+    "opendiscord:name":ODQuestionData<string>,
+    "opendiscord:required":ODQuestionData<boolean>,
+    "opendiscord:placeholder":ODQuestionData<string>,
+    
+    "opendiscord:length-enabled":ODQuestionData<boolean>,
+    "opendiscord:length-min":ODQuestionData<number>,
+    "opendiscord:length-max":ODQuestionData<number>
+}
+
 /**## ODQuestionManager `class`
  * This is an Open Ticket question manager.
  * 
@@ -120,19 +153,6 @@ export class ODQuestionData<DataType extends api.ODValidJsonType> extends api.OD
     }
 }
 
-/**## ODShortQuestionIds `type`
- * This interface is a list of ids available in the `ODShortQuestion` class.
- * It's used to generate typescript declarations for this class.
- */
-export interface ODShortQuestionIds {
-    "opendiscord:name":ODQuestionData<string>,
-    "opendiscord:required":ODQuestionData<boolean>,
-    "opendiscord:placeholder":ODQuestionData<string>,
-    
-    "opendiscord:length-enabled":ODQuestionData<boolean>,
-    "opendiscord:length-min":ODQuestionData<number>,
-    "opendiscord:length-max":ODQuestionData<number>
-}
 
 /**## ODShortQuestion `class`
  * This is an Open Ticket short question.
@@ -148,21 +168,21 @@ export class ODShortQuestion extends ODQuestion {
         super(id,"opendiscord:short",data)
     }
 
-    get<QuestionId extends keyof ODShortQuestionIds>(id:QuestionId): ODShortQuestionIds[QuestionId]
+    get<QuestionId extends keyof ODShortQuestionIdMappings>(id:QuestionId): ODShortQuestionIdMappings[QuestionId]
     get(id:api.ODValidId): ODQuestionData<api.ODValidJsonType>|null
     
     get(id:api.ODValidId): ODQuestionData<api.ODValidJsonType>|null {
         return super.get(id)
     }
 
-    remove<QuestionId extends keyof ODShortQuestionIds>(id:QuestionId): ODShortQuestionIds[QuestionId]
+    remove<QuestionId extends keyof ODShortQuestionIdMappings>(id:QuestionId): ODShortQuestionIdMappings[QuestionId]
     remove(id:api.ODValidId): ODQuestionData<api.ODValidJsonType>|null
     
     remove(id:api.ODValidId): ODQuestionData<api.ODValidJsonType>|null {
         return super.remove(id)
     }
 
-    exists(id:keyof ODShortQuestionIds): boolean
+    exists(id:keyof ODShortQuestionIdMappings): boolean
     exists(id:api.ODValidId): boolean
     
     exists(id:api.ODValidId): boolean {
@@ -172,20 +192,6 @@ export class ODShortQuestion extends ODQuestion {
     static fromJson(json: ODQuestionJson): ODShortQuestion {
         return new ODShortQuestion(json.id,json.data.map((data) => new ODQuestionData(data.id,data.value)))
     }
-}
-
-/**## ODParagraphQuestionIds `type`
- * This interface is a list of ids available in the `ODParagraphQuestion` class.
- * It's used to generate typescript declarations for this class.
- */
-export interface ODParagraphQuestionIds {
-    "opendiscord:name":ODQuestionData<string>,
-    "opendiscord:required":ODQuestionData<boolean>,
-    "opendiscord:placeholder":ODQuestionData<string>,
-    
-    "opendiscord:length-enabled":ODQuestionData<boolean>,
-    "opendiscord:length-min":ODQuestionData<number>,
-    "opendiscord:length-max":ODQuestionData<number>
 }
 
 /**## ODParagraphQuestion `class`
@@ -202,21 +208,21 @@ export class ODParagraphQuestion extends ODQuestion {
         super(id,"opendiscord:paragraph",data)
     }
 
-    get<QuestionId extends keyof ODParagraphQuestionIds>(id:QuestionId): ODParagraphQuestionIds[QuestionId]
+    get<QuestionId extends keyof ODParagraphQuestionIdMappings>(id:QuestionId): ODParagraphQuestionIdMappings[QuestionId]
     get(id:api.ODValidId): ODQuestionData<api.ODValidJsonType>|null
     
     get(id:api.ODValidId): ODQuestionData<api.ODValidJsonType>|null {
         return super.get(id)
     }
 
-    remove<QuestionId extends keyof ODParagraphQuestionIds>(id:QuestionId): ODParagraphQuestionIds[QuestionId]
+    remove<QuestionId extends keyof ODParagraphQuestionIdMappings>(id:QuestionId): ODParagraphQuestionIdMappings[QuestionId]
     remove(id:api.ODValidId): ODQuestionData<api.ODValidJsonType>|null
     
     remove(id:api.ODValidId): ODQuestionData<api.ODValidJsonType>|null {
         return super.remove(id)
     }
 
-    exists(id:keyof ODParagraphQuestionIds): boolean
+    exists(id:keyof ODParagraphQuestionIdMappings): boolean
     exists(id:api.ODValidId): boolean
     
     exists(id:api.ODValidId): boolean {

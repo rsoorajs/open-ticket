@@ -7,6 +7,98 @@ import * as crypto from "crypto"
 import { ODOptionsJsonConfig_TicketOptionEmbedSettings, ODOptionsJsonConfig_TicketOptionPingSettings } from "../mappings/config.js"
 import { ODRoleUpdateMode } from "./role.js"
 
+/**## ODOptionIdConstraint `type`
+ * The constraint/layout for id mappings/interfaces of the `ODOption` class.
+ */
+export type ODOptionIdConstraint = Record<string,ODOptionData<api.ODValidJsonType>>
+
+/**## ODTicketOptionIdMappings `interface`
+ * A list of all available IDs in the default `ODTicketOption` class in `opendiscord`.
+ * It's used to generate typescript declarations for this class.
+ */
+export interface ODTicketOptionIdMappings extends ODOptionIdConstraint {
+    "opendiscord:name":ODOptionData<string>,
+    "opendiscord:description":ODOptionData<string>,
+    
+    "opendiscord:button-emoji":ODOptionData<string>,
+    "opendiscord:button-label":ODOptionData<string>,
+    "opendiscord:button-color":ODOptionData<api.ODValidButtonColor>,
+    
+    "opendiscord:admins":ODOptionData<string[]>,
+    "opendiscord:admins-readonly":ODOptionData<string[]>,
+    "opendiscord:allow-blacklisted-users":ODOptionData<boolean>,
+    "opendiscord:questions":ODOptionData<string[]>,
+    
+    "opendiscord:channel-prefix":ODOptionData<string>,
+    "opendiscord:channel-suffix":ODOptionData<"user-name"|"user-nickname"|"user-id"|"random-number"|"random-hex"|"counter-dynamic"|"counter-fixed">,
+    "opendiscord:channel-category":ODOptionData<string>,
+    "opendiscord:channel-category-closed":ODOptionData<string>,
+    "opendiscord:channel-category-backup":ODOptionData<string>,
+    "opendiscord:channel-categories-claimed":ODOptionData<{user:string,category:string}[]>,
+    "opendiscord:channel-topic":ODOptionData<string>,
+    
+    "opendiscord:dm-message-enabled":ODOptionData<boolean>,
+    "opendiscord:dm-message-text":ODOptionData<string>,
+    "opendiscord:dm-message-embed":ODOptionData<ODOptionsJsonConfig_TicketOptionEmbedSettings>,
+
+    "opendiscord:ticket-message-enabled":ODOptionData<boolean>,
+    "opendiscord:ticket-message-text":ODOptionData<string>,
+    "opendiscord:ticket-message-embed":ODOptionData<ODOptionsJsonConfig_TicketOptionEmbedSettings>,
+    "opendiscord:ticket-message-ping":ODOptionData<ODOptionsJsonConfig_TicketOptionPingSettings>,
+
+    "opendiscord:autoclose-enable-hours":ODOptionData<boolean>,
+    "opendiscord:autoclose-enable-leave":ODOptionData<boolean>,
+    "opendiscord:autoclose-disable-claim":ODOptionData<boolean>,
+    "opendiscord:autoclose-hours":ODOptionData<number>,
+
+    "opendiscord:autodelete-enable-days":ODOptionData<boolean>,
+    "opendiscord:autodelete-enable-leave":ODOptionData<boolean>,
+    "opendiscord:autodelete-disable-claim":ODOptionData<boolean>,
+    "opendiscord:autodelete-days":ODOptionData<number>,
+    
+    "opendiscord:cooldown-enabled":ODOptionData<boolean>,
+    "opendiscord:cooldown-minutes":ODOptionData<number>,
+
+    "opendiscord:limits-enabled":ODOptionData<boolean>,
+    "opendiscord:limits-maximum-global":ODOptionData<number>,
+    "opendiscord:limits-maximum-user":ODOptionData<number>
+
+    "opendiscord:slowmode-enabled":ODOptionData<boolean>,
+    "opendiscord:slowmode-seconds":ODOptionData<number>,
+}
+
+/**## ODWebsiteOptionIdMappings `interface`
+ * A list of all available IDs in the default `ODWebsiteOption` class in `opendiscord`.
+ * It's used to generate typescript declarations for this class.
+ */
+export interface ODWebsiteOptionIdMappings extends ODOptionIdConstraint {
+    "opendiscord:name":ODOptionData<string>,
+    "opendiscord:description":ODOptionData<string>,
+    
+    "opendiscord:button-emoji":ODOptionData<string>,
+    "opendiscord:button-label":ODOptionData<string>,
+    
+    "opendiscord:url":ODOptionData<string>,
+}
+
+/**## ODRoleOptionIdMappings `interface`
+ * A list of all available IDs in the default `ODRoleOption` class in `opendiscord`.
+ * It's used to generate typescript declarations for this class.
+ */
+export interface ODRoleOptionIdMappings extends ODOptionIdConstraint {
+    "opendiscord:name":ODOptionData<string>,
+    "opendiscord:description":ODOptionData<string>,
+    
+    "opendiscord:button-emoji":ODOptionData<string>,
+    "opendiscord:button-label":ODOptionData<string>,
+    "opendiscord:button-color":ODOptionData<api.ODValidButtonColor>,
+    
+    "opendiscord:roles":ODOptionData<string[]>,
+    "opendiscord:mode":ODOptionData<ODRoleUpdateMode>,
+    "opendiscord:remove-roles-on-add":ODOptionData<string[]>,
+    "opendiscord:add-on-join":ODOptionData<boolean>
+}
+
 /**## ODOptionManager `class`
  * This is an Open Ticket option manager.
  * 
@@ -128,61 +220,6 @@ export class ODOptionData<DataType extends api.ODValidJsonType> extends api.ODMa
     }
 }
 
-/**## ODTicketOptionIds `type`
- * This interface is a list of ids available in the `ODTicketOption` class.
- * It's used to generate typescript declarations for this class.
- */
-export interface ODTicketOptionIds {
-    "opendiscord:name":ODOptionData<string>,
-    "opendiscord:description":ODOptionData<string>,
-    
-    "opendiscord:button-emoji":ODOptionData<string>,
-    "opendiscord:button-label":ODOptionData<string>,
-    "opendiscord:button-color":ODOptionData<api.ODValidButtonColor>,
-    
-    "opendiscord:admins":ODOptionData<string[]>,
-    "opendiscord:admins-readonly":ODOptionData<string[]>,
-    "opendiscord:allow-blacklisted-users":ODOptionData<boolean>,
-    "opendiscord:questions":ODOptionData<string[]>,
-    
-    "opendiscord:channel-prefix":ODOptionData<string>,
-    "opendiscord:channel-suffix":ODOptionData<"user-name"|"user-nickname"|"user-id"|"random-number"|"random-hex"|"counter-dynamic"|"counter-fixed">,
-    "opendiscord:channel-category":ODOptionData<string>,
-    "opendiscord:channel-category-closed":ODOptionData<string>,
-    "opendiscord:channel-category-backup":ODOptionData<string>,
-    "opendiscord:channel-categories-claimed":ODOptionData<{user:string,category:string}[]>,
-    "opendiscord:channel-topic":ODOptionData<string>,
-    
-    "opendiscord:dm-message-enabled":ODOptionData<boolean>,
-    "opendiscord:dm-message-text":ODOptionData<string>,
-    "opendiscord:dm-message-embed":ODOptionData<ODOptionsJsonConfig_TicketOptionEmbedSettings>,
-
-    "opendiscord:ticket-message-enabled":ODOptionData<boolean>,
-    "opendiscord:ticket-message-text":ODOptionData<string>,
-    "opendiscord:ticket-message-embed":ODOptionData<ODOptionsJsonConfig_TicketOptionEmbedSettings>,
-    "opendiscord:ticket-message-ping":ODOptionData<ODOptionsJsonConfig_TicketOptionPingSettings>,
-
-    "opendiscord:autoclose-enable-hours":ODOptionData<boolean>,
-    "opendiscord:autoclose-enable-leave":ODOptionData<boolean>,
-    "opendiscord:autoclose-disable-claim":ODOptionData<boolean>,
-    "opendiscord:autoclose-hours":ODOptionData<number>,
-
-    "opendiscord:autodelete-enable-days":ODOptionData<boolean>,
-    "opendiscord:autodelete-enable-leave":ODOptionData<boolean>,
-    "opendiscord:autodelete-disable-claim":ODOptionData<boolean>,
-    "opendiscord:autodelete-days":ODOptionData<number>,
-    
-    "opendiscord:cooldown-enabled":ODOptionData<boolean>,
-    "opendiscord:cooldown-minutes":ODOptionData<number>,
-
-    "opendiscord:limits-enabled":ODOptionData<boolean>,
-    "opendiscord:limits-maximum-global":ODOptionData<number>,
-    "opendiscord:limits-maximum-user":ODOptionData<number>
-
-    "opendiscord:slowmode-enabled":ODOptionData<boolean>,
-    "opendiscord:slowmode-seconds":ODOptionData<number>,
-}
-
 /**## ODTicketOption `class`
  * This is an Open Ticket ticket option.
  * 
@@ -197,21 +234,21 @@ export class ODTicketOption extends ODOption {
         super(id,"opendiscord:ticket",data)
     }
 
-    get<OptionId extends keyof ODTicketOptionIds>(id:OptionId): ODTicketOptionIds[OptionId]
+    get<OptionId extends keyof ODTicketOptionIdMappings>(id:OptionId): ODTicketOptionIdMappings[OptionId]
     get(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null
     
     get(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null {
         return super.get(id)
     }
 
-    remove<OptionId extends keyof ODTicketOptionIds>(id:OptionId): ODTicketOptionIds[OptionId]
+    remove<OptionId extends keyof ODTicketOptionIdMappings>(id:OptionId): ODTicketOptionIdMappings[OptionId]
     remove(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null
     
     remove(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null {
         return super.remove(id)
     }
 
-    exists(id:keyof ODTicketOptionIds): boolean
+    exists(id:keyof ODTicketOptionIdMappings): boolean
     exists(id:api.ODValidId): boolean
     
     exists(id:api.ODValidId): boolean {
@@ -221,20 +258,6 @@ export class ODTicketOption extends ODOption {
     static fromJson(json: ODOptionJson): ODTicketOption {
         return new ODTicketOption(json.id,json.data.map((data) => new ODOptionData(data.id,data.value)))
     }
-}
-
-/**## ODWebsiteOptionIds `type`
- * This interface is a list of ids available in the `ODWebsiteOption` class.
- * It's used to generate typescript declarations for this class.
- */
-export interface ODWebsiteOptionIds {
-    "opendiscord:name":ODOptionData<string>,
-    "opendiscord:description":ODOptionData<string>,
-    
-    "opendiscord:button-emoji":ODOptionData<string>,
-    "opendiscord:button-label":ODOptionData<string>,
-    
-    "opendiscord:url":ODOptionData<string>,
 }
 
 /**## ODWebsiteOption `class`
@@ -251,21 +274,21 @@ export class ODWebsiteOption extends ODOption {
         super(id,"opendiscord:website",data)
     }
 
-    get<OptionId extends keyof ODWebsiteOptionIds>(id:OptionId): ODWebsiteOptionIds[OptionId]
+    get<OptionId extends keyof ODWebsiteOptionIdMappings>(id:OptionId): ODWebsiteOptionIdMappings[OptionId]
     get(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null
     
     get(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null {
         return super.get(id)
     }
 
-    remove<OptionId extends keyof ODWebsiteOptionIds>(id:OptionId): ODWebsiteOptionIds[OptionId]
+    remove<OptionId extends keyof ODWebsiteOptionIdMappings>(id:OptionId): ODWebsiteOptionIdMappings[OptionId]
     remove(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null
     
     remove(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null {
         return super.remove(id)
     }
 
-    exists(id:keyof ODWebsiteOptionIds): boolean
+    exists(id:keyof ODWebsiteOptionIdMappings): boolean
     exists(id:api.ODValidId): boolean
     
     exists(id:api.ODValidId): boolean {
@@ -275,24 +298,6 @@ export class ODWebsiteOption extends ODOption {
     static fromJson(json: ODOptionJson): ODWebsiteOption {
         return new ODWebsiteOption(json.id,json.data.map((data) => new ODOptionData(data.id,data.value)))
     }
-}
-
-/**## ODRoleOptionIds `type`
- * This interface is a list of ids available in the `ODRoleOption` class.
- * It's used to generate typescript declarations for this class.
- */
-export interface ODRoleOptionIds {
-    "opendiscord:name":ODOptionData<string>,
-    "opendiscord:description":ODOptionData<string>,
-    
-    "opendiscord:button-emoji":ODOptionData<string>,
-    "opendiscord:button-label":ODOptionData<string>,
-    "opendiscord:button-color":ODOptionData<api.ODValidButtonColor>,
-    
-    "opendiscord:roles":ODOptionData<string[]>,
-    "opendiscord:mode":ODOptionData<ODRoleUpdateMode>,
-    "opendiscord:remove-roles-on-add":ODOptionData<string[]>,
-    "opendiscord:add-on-join":ODOptionData<boolean>
 }
 
 /**## ODRoleOption `class`
@@ -309,21 +314,21 @@ export class ODRoleOption extends ODOption {
         super(id,"opendiscord:role",data)
     }
 
-    get<OptionId extends keyof ODRoleOptionIds>(id:OptionId): ODRoleOptionIds[OptionId]
+    get<OptionId extends keyof ODRoleOptionIdMappings>(id:OptionId): ODRoleOptionIdMappings[OptionId]
     get(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null
     
     get(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null {
         return super.get(id)
     }
 
-    remove<OptionId extends keyof ODRoleOptionIds>(id:OptionId): ODRoleOptionIds[OptionId]
+    remove<OptionId extends keyof ODRoleOptionIdMappings>(id:OptionId): ODRoleOptionIdMappings[OptionId]
     remove(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null
     
     remove(id:api.ODValidId): ODOptionData<api.ODValidJsonType>|null {
         return super.remove(id)
     }
 
-    exists(id:keyof ODRoleOptionIds): boolean
+    exists(id:keyof ODRoleOptionIdMappings): boolean
     exists(id:api.ODValidId): boolean
     
     exists(id:api.ODValidId): boolean {
@@ -376,7 +381,7 @@ export class ODOptionSuffixManager extends api.ODManager<ODOptionSuffix> {
  * 
  * Use `getSuffix()` to get the new suffix!
  */
-export class ODOptionSuffix extends api.ODManagerData {
+export abstract class ODOptionSuffix extends api.ODManagerData {
     /**The option of this suffix. */
     option: ODTicketOption
     
@@ -386,9 +391,7 @@ export class ODOptionSuffix extends api.ODManagerData {
     }
 
     /**Get the suffix for a new ticket. */
-    async getSuffix(member:discord.GuildMember): Promise<string> {
-        throw new api.ODSystemError("Tried to use an unimplemented ODOptionSuffix!")
-    }
+    abstract getSuffix(member:discord.GuildMember): Promise<string>
 }
 
 /**## ODOptionUserNameSuffix `class`

@@ -4,6 +4,22 @@
 import * as api from "@open-discord-bots/framework/api"
 import * as discord from "discord.js"
 
+/**## ODRoleIdConstraint `type`
+ * The constraint/layout for id mappings/interfaces of the `ODRole` class.
+ */
+export type ODRoleIdConstraint = Record<string,ODRoleData<api.ODValidJsonType>>
+
+/**## ODRoleIdMappings `interface`
+ * A list of all available IDs in the default `ODRole` class in `opendiscord`.
+ * It's used to generate typescript declarations for this class.
+ */
+export interface ODRoleIdMappings extends ODRoleIdConstraint {
+    "opendiscord:roles":ODRoleData<string[]>,
+    "opendiscord:mode":ODRoleData<ODRoleUpdateMode>,
+    "opendiscord:remove-roles-on-add":ODRoleData<string[]>,
+    "opendiscord:add-on-join":ODRoleData<boolean>
+}
+
 /**## ODRoleManager `class`
  * This is an Open Ticket role manager.
  * 
@@ -42,17 +58,6 @@ export interface ODRoleJson {
     version:string,
     /**The full list of properties/variables related to this role. */
     data:ODRoleDataJson[]
-}
-
-/**## ODRoleIds `type`
- * This interface is a list of ids available in the `ODRole` class.
- * It's used to generate typescript declarations for this class.
- */
-export interface ODRoleIds {
-    "opendiscord:roles":ODRoleData<string[]>,
-    "opendiscord:mode":ODRoleData<ODRoleUpdateMode>,
-    "opendiscord:remove-roles-on-add":ODRoleData<string[]>,
-    "opendiscord:add-on-join":ODRoleData<boolean>
 }
 
 /**## ODRole `class`
@@ -95,21 +100,21 @@ export class ODRole extends api.ODManager<ODRoleData<api.ODValidJsonType>> {
         return new ODRole(json.id,json.data.map((data) => new ODRoleData(data.id,data.value)))
     }
 
-    get<OptionId extends keyof ODRoleIds>(id:OptionId): ODRoleIds[OptionId]
+    get<OptionId extends keyof ODRoleIdMappings>(id:OptionId): ODRoleIdMappings[OptionId]
     get(id:api.ODValidId): ODRoleData<api.ODValidJsonType>|null
     
     get(id:api.ODValidId): ODRoleData<api.ODValidJsonType>|null {
         return super.get(id)
     }
 
-    remove<OptionId extends keyof ODRoleIds>(id:OptionId): ODRoleIds[OptionId]
+    remove<OptionId extends keyof ODRoleIdMappings>(id:OptionId): ODRoleIdMappings[OptionId]
     remove(id:api.ODValidId): ODRoleData<api.ODValidJsonType>|null
     
     remove(id:api.ODValidId): ODRoleData<api.ODValidJsonType>|null {
         return super.remove(id)
     }
 
-    exists(id:keyof ODRoleIds): boolean
+    exists(id:keyof ODRoleIdMappings): boolean
     exists(id:api.ODValidId): boolean
     
     exists(id:api.ODValidId): boolean {

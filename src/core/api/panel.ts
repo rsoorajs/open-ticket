@@ -4,6 +4,36 @@
 import * as api from "@open-discord-bots/framework/api"
 import { ODPanelsJsonConfig_PanelEmbedSettings } from "../mappings/config.js"
 
+
+/**## ODPanelIdConstraint `type`
+ * The constraint/layout for id mappings/interfaces of the `ODPanel` class.
+ */
+export type ODPanelIdConstraint = Record<string,ODPanelData<api.ODValidJsonType>>
+
+/**## ODPanelIdMappings `interface`
+ * A list of all available IDs in the default `ODPanel` class in `opendiscord`.
+ * It's used to generate typescript declarations for this class.
+ */
+export interface ODPanelIdMappings extends ODPanelIdConstraint {
+    "opendiscord:name":ODPanelData<string>,
+    "opendiscord:options":ODPanelData<string[]>,
+    "opendiscord:dropdown":ODPanelData<boolean>,
+
+    "opendiscord:text":ODPanelData<string>,
+    "opendiscord:embed":ODPanelData<ODPanelsJsonConfig_PanelEmbedSettings>,
+
+    "opendiscord:dropdown-placeholder":ODPanelData<string>,
+    
+    "opendiscord:enable-max-tickets-warning-text":ODPanelData<boolean>,
+    "opendiscord:enable-max-tickets-warning-embed":ODPanelData<boolean>,
+    
+    "opendiscord:describe-options-layout":ODPanelData<"simple"|"normal"|"detailed">,
+    "opendiscord:describe-options-custom-title":ODPanelData<string>,
+    "opendiscord:describe-options-in-text":ODPanelData<boolean>,
+    "opendiscord:describe-options-in-embed-fields":ODPanelData<boolean>,
+    "opendiscord:describe-options-in-embed-description":ODPanelData<boolean>
+}
+
 /**## ODPanelManager `class`
  * This is an Open Ticket panel manager.
  * 
@@ -44,30 +74,6 @@ export interface ODPanelJson {
     data:ODPanelDataJson[]
 }
 
-/**## ODPanelIds `type`
- * This interface is a list of ids available in the `ODPanel` class.
- * It's used to generate typescript declarations for this class.
- */
-export interface ODPanelIds {
-    "opendiscord:name":ODPanelData<string>,
-    "opendiscord:options":ODPanelData<string[]>,
-    "opendiscord:dropdown":ODPanelData<boolean>,
-
-    "opendiscord:text":ODPanelData<string>,
-    "opendiscord:embed":ODPanelData<ODPanelsJsonConfig_PanelEmbedSettings>,
-
-    "opendiscord:dropdown-placeholder":ODPanelData<string>,
-    
-    "opendiscord:enable-max-tickets-warning-text":ODPanelData<boolean>,
-    "opendiscord:enable-max-tickets-warning-embed":ODPanelData<boolean>,
-    
-    "opendiscord:describe-options-layout":ODPanelData<"simple"|"normal"|"detailed">,
-    "opendiscord:describe-options-custom-title":ODPanelData<string>,
-    "opendiscord:describe-options-in-text":ODPanelData<boolean>,
-    "opendiscord:describe-options-in-embed-fields":ODPanelData<boolean>,
-    "opendiscord:describe-options-in-embed-description":ODPanelData<boolean>
-}
-
 /**## ODPanel `class`
  * This is an Open Ticket panel.
  * 
@@ -106,21 +112,21 @@ export class ODPanel extends api.ODManager<ODPanelData<api.ODValidJsonType>> {
         return new ODPanel(json.id,json.data.map((data) => new ODPanelData(data.id,data.value)))
     }
 
-    get<PanelId extends keyof ODPanelIds>(id:PanelId): ODPanelIds[PanelId]
+    get<PanelId extends keyof ODPanelIdMappings>(id:PanelId): ODPanelIdMappings[PanelId]
     get(id:api.ODValidId): ODPanelData<api.ODValidJsonType>|null
     
     get(id:api.ODValidId): ODPanelData<api.ODValidJsonType>|null {
         return super.get(id)
     }
 
-    remove<PanelId extends keyof ODPanelIds>(id:PanelId): ODPanelIds[PanelId]
+    remove<PanelId extends keyof ODPanelIdMappings>(id:PanelId): ODPanelIdMappings[PanelId]
     remove(id:api.ODValidId): ODPanelData<api.ODValidJsonType>|null
     
     remove(id:api.ODValidId): ODPanelData<api.ODValidJsonType>|null {
         return super.remove(id)
     }
 
-    exists(id:keyof ODPanelIds): boolean
+    exists(id:keyof ODPanelIdMappings): boolean
     exists(id:api.ODValidId): boolean
     
     exists(id:api.ODValidId): boolean {

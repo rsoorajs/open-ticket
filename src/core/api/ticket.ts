@@ -5,6 +5,55 @@ import * as api from "@open-discord-bots/framework/api"
 import { ODTicketOption } from "./option.js"
 import * as discord from "discord.js"
 
+/**## ODTicketIdConstraint `type`
+ * The constraint/layout for id mappings/interfaces of the `ODTicket` class.
+ */
+export type ODTicketIdConstraint = Record<string,ODTicketData<api.ODValidJsonType>>
+
+/**## ODTicketIdMappings `interface`
+ * A list of all available IDs in the default `ODTicket` class in `opendiscord`.
+ * It's used to generate typescript declarations for this class.
+ */
+export interface ODTicketIdMappings extends ODTicketIdConstraint {
+    "opendiscord:busy":ODTicketData<boolean>,
+    "opendiscord:ticket-message":ODTicketData<string|null>,
+    "opendiscord:participants":ODTicketData<{type:"role"|"user",id:string}[]>,
+    "opendiscord:channel-suffix":ODTicketData<string>,
+    "opendiscord:previous-creators":ODTicketData<string[]>,
+    
+    "opendiscord:open":ODTicketData<boolean>,
+    "opendiscord:opened-by":ODTicketData<string|null>,
+    "opendiscord:opened-on":ODTicketData<number|null>,
+    "opendiscord:closed":ODTicketData<boolean>,
+    "opendiscord:closed-by":ODTicketData<string|null>,
+    "opendiscord:closed-on":ODTicketData<number|null>,
+    "opendiscord:reopened":ODTicketData<boolean>,
+    "opendiscord:reopened-by":ODTicketData<string|null>,
+    "opendiscord:reopened-on":ODTicketData<number|null>,
+    "opendiscord:claimed":ODTicketData<boolean>,
+    "opendiscord:claimed-by":ODTicketData<string|null>,
+    "opendiscord:claimed-on":ODTicketData<number|null>,
+    "opendiscord:pinned":ODTicketData<boolean>,
+    "opendiscord:pinned-by":ODTicketData<string|null>,
+    "opendiscord:pinned-on":ODTicketData<number|null>,
+    "opendiscord:for-deletion":ODTicketData<boolean>,
+
+    "opendiscord:category":ODTicketData<string|null>,
+    "opendiscord:category-mode":ODTicketData<null|"normal"|"closed"|"backup"|"claimed">,
+    
+    "opendiscord:autoclose-enabled":ODTicketData<boolean>,
+    "opendiscord:autoclose-hours":ODTicketData<number>,
+    "opendiscord:autoclosed":ODTicketData<boolean>,
+    "opendiscord:autodelete-enabled":ODTicketData<boolean>,
+    "opendiscord:autodelete-days":ODTicketData<number>,
+
+    "opendiscord:answers":ODTicketData<{id:string,name:string,type:"short"|"paragraph",value:string|null}[]>,
+    "opendiscord:priority":ODTicketData<number>,
+    "opendiscord:topic":ODTicketData<string>,
+    "opendiscord:message-sent":ODTicketData<boolean>,
+    "opendiscord:admin-message-sent":ODTicketData<boolean>,
+}
+
 /**## ODTicketManager `class`
  * This is an Open Ticket ticket manager.
  * 
@@ -144,50 +193,6 @@ export interface ODTicketJson {
     data:ODTicketDataJson[]
 }
 
-/**## ODTicketIds `type`
- * This interface is a list of ids available in the `ODTicket` class.
- * It's used to generate typescript declarations for this class.
- */
-export interface ODTicketIds {
-    "opendiscord:busy":ODTicketData<boolean>,
-    "opendiscord:ticket-message":ODTicketData<string|null>,
-    "opendiscord:participants":ODTicketData<{type:"role"|"user",id:string}[]>,
-    "opendiscord:channel-suffix":ODTicketData<string>,
-    "opendiscord:previous-creators":ODTicketData<string[]>,
-    
-    "opendiscord:open":ODTicketData<boolean>,
-    "opendiscord:opened-by":ODTicketData<string|null>,
-    "opendiscord:opened-on":ODTicketData<number|null>,
-    "opendiscord:closed":ODTicketData<boolean>,
-    "opendiscord:closed-by":ODTicketData<string|null>,
-    "opendiscord:closed-on":ODTicketData<number|null>,
-    "opendiscord:reopened":ODTicketData<boolean>,
-    "opendiscord:reopened-by":ODTicketData<string|null>,
-    "opendiscord:reopened-on":ODTicketData<number|null>,
-    "opendiscord:claimed":ODTicketData<boolean>,
-    "opendiscord:claimed-by":ODTicketData<string|null>,
-    "opendiscord:claimed-on":ODTicketData<number|null>,
-    "opendiscord:pinned":ODTicketData<boolean>,
-    "opendiscord:pinned-by":ODTicketData<string|null>,
-    "opendiscord:pinned-on":ODTicketData<number|null>,
-    "opendiscord:for-deletion":ODTicketData<boolean>,
-
-    "opendiscord:category":ODTicketData<string|null>,
-    "opendiscord:category-mode":ODTicketData<null|"normal"|"closed"|"backup"|"claimed">,
-    
-    "opendiscord:autoclose-enabled":ODTicketData<boolean>,
-    "opendiscord:autoclose-hours":ODTicketData<number>,
-    "opendiscord:autoclosed":ODTicketData<boolean>,
-    "opendiscord:autodelete-enabled":ODTicketData<boolean>,
-    "opendiscord:autodelete-days":ODTicketData<number>,
-
-    "opendiscord:answers":ODTicketData<{id:string,name:string,type:"short"|"paragraph",value:string|null}[]>,
-    "opendiscord:priority":ODTicketData<number>,
-    "opendiscord:topic":ODTicketData<string>,
-    "opendiscord:message-sent":ODTicketData<boolean>,
-    "opendiscord:admin-message-sent":ODTicketData<boolean>,
-}
-
 /**## ODTicket `class`
  * This is an Open Ticket ticket.
  * 
@@ -241,21 +246,21 @@ export class ODTicket extends api.ODManager<ODTicketData<api.ODValidJsonType>> {
         return new ODTicket(json.id,option,json.data.map((data) => new ODTicketData(data.id,data.value)))
     }
 
-    get<OptionId extends keyof ODTicketIds>(id:OptionId): ODTicketIds[OptionId]
+    get<OptionId extends keyof ODTicketIdMappings>(id:OptionId): ODTicketIdMappings[OptionId]
     get(id:api.ODValidId): ODTicketData<api.ODValidJsonType>|null
     
     get(id:api.ODValidId): ODTicketData<api.ODValidJsonType>|null {
         return super.get(id)
     }
 
-    remove<OptionId extends keyof ODTicketIds>(id:OptionId): ODTicketIds[OptionId]
+    remove<OptionId extends keyof ODTicketIdMappings>(id:OptionId): ODTicketIdMappings[OptionId]
     remove(id:api.ODValidId): ODTicketData<api.ODValidJsonType>|null
     
     remove(id:api.ODValidId): ODTicketData<api.ODValidJsonType>|null {
         return super.remove(id)
     }
 
-    exists(id:keyof ODTicketIds): boolean
+    exists(id:keyof ODTicketIdMappings): boolean
     exists(id:api.ODValidId): boolean
     
     exists(id:api.ODValidId): boolean {
