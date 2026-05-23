@@ -12,6 +12,7 @@ import { ODTicketClearFilter } from "../api/ticket.js"
 export interface ODStateManagerIdMappings extends api.ODStateManagerIdConstraint {
     "opendiscord:interactive-message":ODInteractiveMessageState,
     "opendiscord:clear-message":ODClearMessageState,
+    "opendiscord:panel-message":ODPanelMessageState,
 }
 
 /////////////////////////////
@@ -58,5 +59,23 @@ export class ODClearMessageState extends api.ODState<{
         super(id,client,database,{
             autodeleteOnRestart:true
         })
+    }
+}
+
+/**## ODPanelMessageState `class
+ * A special class with state types for the Open Ticket panel message.
+ */
+export class ODPanelMessageState extends api.ODState<{
+    /**The method this message was generated with. */
+    messageOrigin:"slash"|"text"|"auto-update"|"other",
+    /**The Id of the panel associated with this message. */
+    panelId:string,
+    /**A list of options available in this panel. (buttons or dropdown) */
+    panelOptionIds:string[]
+    /**Should this panel be auto-updated on restart? */
+    panelAutoUpdate:boolean
+},false,false> {
+    constructor(id:api.ODValidId,client:api.ODClientManager,database:api.ODDatabase){
+        super(id,client,database,{})
     }
 }

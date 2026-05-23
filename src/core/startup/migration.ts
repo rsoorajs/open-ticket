@@ -339,9 +339,11 @@ export const migrations = [
             }
 
             //migrate database
+            const globalDatabase = opendiscord.databases.get("opendiscord:global")
             const optionDatabase = opendiscord.databases.get("opendiscord:options")
             const ticketDatabase = opendiscord.databases.get("opendiscord:tickets")
-
+            const stateDatabase = opendiscord.databases.get("opendiscord:message-states")
+            
             for (const option of (await optionDatabase.getCategory("opendiscord:used-option") ?? [])){
                 const optionData = option.value
                 optionData.data = optionData.data.filter((data) => (
@@ -359,6 +361,34 @@ export const migrations = [
                 
                 ticketDatabase.set("opendiscord:ticket",ticket.key,ticketData)
             }
+
+            //migrate old panel messages from global.json to the new message states
+            const migratedPanelStates: {channelId:string,messageId:string,panelId:string,autoUpdate:boolean}[] = []
+            opendiscord.events.get("afterClientReady").listen(async () => {
+                for (const panelMessage of (await globalDatabase.getCategory("opendiscord:panel-message") ?? [])){
+                    const splittedId = panelMessage.key.split("_")
+                    const channelId = splittedId[0]
+                    const messageId = splittedId[1]
+                    const message = await opendiscord.client.fetchChannelMessage(channelId,messageId)
+                    const autoUpdate = typeof (await globalDatabase.get("opendiscord:panel-update",panelMessage.key)) == "string"
+                    //if message still exists
+                    if (message) migratedPanelStates.push({channelId,messageId,panelId:panelMessage.value,autoUpdate})
+
+                    await globalDatabase.delete("opendiscord:panel-message",panelMessage.key)
+                    await globalDatabase.delete("opendiscord:panel-update",panelMessage.key)
+                }
+            })
+            opendiscord.events.get("afterStatesInitiated").listen(async (states) => {
+                const panelMsgState = states.get("opendiscord:panel-message")
+                for (const {channelId,messageId,panelId,autoUpdate} of migratedPanelStates){
+                    await panelMsgState.setMsgState({channel:channelId,message:messageId},{
+                        messageOrigin:"auto-update",
+                        panelId,
+                        panelOptionIds:[],
+                        panelAutoUpdate:autoUpdate
+                    },false)
+                }
+            })
         }
     }),
 ]

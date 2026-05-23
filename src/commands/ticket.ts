@@ -6,6 +6,7 @@ import * as discord from "discord.js"
 
 const generalConfig = opendiscord.configs.get("opendiscord:general")
 const lang = opendiscord.languages
+const panelMsgState = opendiscord.states.get("opendiscord:panel-message")
 
 async function checkTicketCreationPerms(instance:api.ODButtonResponderInstance|api.ODDropdownResponderInstance|api.ODModalResponderInstance|api.ODCommandResponderInstance,origin:api.ODActionManagerIdMappings["opendiscord:create-ticket-permissions"]["origin"],guild:discord.Guild,user:discord.User,option:api.ODTicketOption){
     //check ticket permissions
@@ -82,7 +83,15 @@ export async function registerButtonResponders(){
     opendiscord.responders.buttons.add(new api.ODButtonResponder("opendiscord:ticket-option",/^od:ticket-option_/))
     opendiscord.responders.buttons.get("opendiscord:ticket-option").workers.add(
         new api.ODWorker("opendiscord:ticket-option",0,async (instance,params,origin,cancel) => {
-            const {guild,channel,user} = instance
+            const {guild,channel,user,message} = instance
+            
+            //check message state
+            const state = await panelMsgState.getMsgState({channel,message})
+            if (!state){
+                //TODO TRANSLATION!!!
+                await instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error").build(origin,{guild,channel,user,error:"This panel is no longer valid or has expired. Create a new panel using `{0}` to solve the issue. It is normal to receive this error after a major Open Ticket update.".replace("{0}","/panel"),layout:"simple",customTitle:"Message State Expired"}))
+                return cancel()
+            }
             
             //responder checks
             const isInGuild = await openticketUtils.replyIsInGuild(instance,origin)
@@ -124,8 +133,16 @@ export async function registerDropdownResponders(){
     opendiscord.responders.dropdowns.add(new api.ODDropdownResponder("opendiscord:panel-dropdown-tickets",/^od:panel-dropdown_/))
     opendiscord.responders.dropdowns.get("opendiscord:panel-dropdown-tickets").workers.add(
         new api.ODWorker("opendiscord:panel-dropdown-tickets",0,async (instance,params,origin,cancel) => {
-            const {guild,channel,user} = instance
+            const {guild,channel,user,message} = instance
             
+            //check message state
+            const state = await panelMsgState.getMsgState({channel,message})
+            if (!state){
+                //TODO TRANSLATION!!!
+                await instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error").build(origin,{guild,channel,user,error:"This panel is no longer valid or has expired. Create a new panel using `{0}` to solve the issue. It is normal to receive this error after a major Open Ticket update.".replace("{0}","/panel"),layout:"simple",customTitle:"Message State Expired"}))
+                return cancel()
+            }
+
             //responder checks
             const isInGuild = await openticketUtils.replyIsInGuild(instance,origin)
             if (!isInGuild || !guild || channel.isDMBased()) return cancel()
@@ -159,11 +176,15 @@ export async function registerDropdownResponders(){
             }
 
             //update panel after dropdown usage (reset panel choice)
-            const globalDatabase = opendiscord.databases.get("opendiscord:global")
-            const rawPanelId = await globalDatabase.get("opendiscord:panel-message",instance.message.channel.id+"_"+instance.message.id)
-            if (rawPanelId){
-                const panel = opendiscord.panels.get(rawPanelId)
-                if (panel) await instance.message.edit((await opendiscord.builders.messages.getSafe("opendiscord:panel").build("auto-update",{guild,channel,user,panel})).message)
+            const panel = opendiscord.panels.get(state.data.panelId)
+            if (panel){
+                const panelMessage = await instance.message.edit((await opendiscord.builders.messages.getSafe("opendiscord:panel").build("auto-update",{guild,channel,user,panel})).message)
+                if (panelMessage) await panelMsgState.setMsgState({channel,message:panelMessage},{
+                    messageOrigin:"auto-update",
+                    panelId:panel.id.value,
+                    panelOptionIds:panel.get("opendiscord:options").value,
+                    panelAutoUpdate:state.data.panelAutoUpdate //same value
+                },panelMessage.flags.has("Ephemeral"))
             }
         })
     )
@@ -171,17 +192,21 @@ export async function registerDropdownResponders(){
 
 export async function registerModalResponders(){
     //TICKET QUESTIONS RESPONDER
-    opendiscord.responders.modals.add(new api.ODModalResponder("opendiscord:ticket-questions",/^od:ticket-questions_/))
+    opendiscord.responders.modals.add(new api.ODModalResponder("opendiscord:ticket-questions",/^od:ticket-questions\|([^|]+)\|([^|]+)/))
     opendiscord.responders.modals.get("opendiscord:ticket-questions").workers.add([
         new api.ODWorker("opendiscord:ticket-questions",0,async (instance,params,origin,cancel) => {
             const {guild,channel,user} = instance
+
+            const match = /^od:ticket-questions\|([^|]+)\|([^|]+)/.exec(instance.interaction.customId)
+            if (!match) return cancel()
+            const optionId = match[1]
+            const originalOrigin = match[2] as ("panel-button"|"panel-dropdown"|"slash"|"text"|"other")
             
             //responder checks
             const isInGuild = await openticketUtils.replyIsInGuild(instance,origin)
             if (!isInGuild || !guild || !channel || channel.isDMBased()) return cancel()
 
             //get option data
-            const optionId = instance.interaction.customId.split("_")[1]
             const option = opendiscord.options.get(optionId)
             if (!option || !(option instanceof api.ODTicketOption)){
                 instance.reply(await opendiscord.builders.messages.getSafe("opendiscord:error-option-unknown").build(origin,{guild:instance.guild,channel,user:instance.user}))
@@ -189,7 +214,6 @@ export async function registerModalResponders(){
             }
 
             //check ticket permissions (modals need check after submit)
-            const originalOrigin = instance.interaction.customId.split("_")[2] as ("panel-button"|"panel-dropdown"|"slash"|"text"|"other")
             if (!(await checkTicketCreationPerms(instance,originalOrigin,guild,user,option))) return cancel()
 
             //get answers

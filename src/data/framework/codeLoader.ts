@@ -68,39 +68,7 @@ export async function loadStartListeningInteractionsCode(){
 
 export async function loadDatabaseCleanersCode(){
     if (!mainServer) return
-
-    //PANEL DATABASE CLEANER
-    opendiscord.code.add(new api.ODCode("opendiscord:panel-database-cleaner",12,async () => {
-        const validPanels: string[] = []
-
-        //check global database for valid panel embeds
-        for (const panel of (await globalDatabase.getCategory("opendiscord:panel-message") ?? [])){
-            if (!validPanels.includes(panel.key)){
-                try{
-                    const splittedId = panel.key.split("_")
-                    const message = await opendiscord.client.fetchChannelMessage(splittedId[0],splittedId[1])
-                    if (message) validPanels.push(panel.key)
-                }catch{}
-            }
-        }
-
-        //remove all unused panels
-        for (const panel of (await globalDatabase.getCategory("opendiscord:panel-message") ?? [])){
-            if (!validPanels.includes(panel.key)){
-                await globalDatabase.delete("opendiscord:panel-message",panel.key)
-                await globalDatabase.delete("opendiscord:panel-update",panel.key)
-            }
-        }
-
-        //delete panel from database on delete
-        opendiscord.client.client.on("messageDelete",async (msg) => {
-            if (await globalDatabase.exists("opendiscord:panel-message",msg.channel.id+"_"+msg.id)){
-                await globalDatabase.delete("opendiscord:panel-message",msg.channel.id+"_"+msg.id)
-                await globalDatabase.delete("opendiscord:panel-update",msg.channel.id+"_"+msg.id)
-            }
-        })
-    }))
-
+    
     //SUFFIX DATABASE CLEANER
     opendiscord.code.add(new api.ODCode("opendiscord:suffix-database-cleaner",11,async () => {
         const validSuffixCounters: string[] = []
@@ -284,34 +252,43 @@ export async function loadDatabaseCleanersCode(){
 
 export async function loadPanelAutoUpdateCode(){
     //PANEL AUTO UPDATE
+    const panelMsgState = opendiscord.states.get("opendiscord:panel-message")
     opendiscord.code.add(new api.ODCode("opendiscord:panel-auto-update",7,async () => {
-        const globalDatabase = opendiscord.databases.get("opendiscord:global")
-        const panelIds = await globalDatabase.getCategory("opendiscord:panel-update") ?? []
         if (!mainServer) return
 
-        for (const panelId of panelIds){
-            const panel = opendiscord.panels.get(panelId.value)
-
-            //panel doesn't exist anymore in config and needs to be removed
-            if (!panel){
-                globalDatabase.delete("opendiscord:panel-update",panelId.key)
-                return
-            }
-
+        for (const panelState of (await panelMsgState.listMsgStates()).map((rawState) => rawState.value)){
             try{
-                const splittedId = panelId.key.split("_")
-                const channel = await opendiscord.client.fetchGuildTextChannel(mainServer,splittedId[0])
-                if (!channel) return
-                const message = await opendiscord.client.fetchChannelMessage(channel,splittedId[1])
-                if (!message || !message.editable) return
+                //fetch panel (& check if auto-update is required)
+                const panel = opendiscord.panels.get(panelState.data.panelId)
+                if (!panel || !panelState.data.panelAutoUpdate) continue
                 
-                message.edit((await opendiscord.builders.messages.getSafe("opendiscord:panel").build("auto-update",{guild:mainServer,channel,user:opendiscord.client.client.user,panel})).message)
+                //fetch panel channel
+                const channel = await opendiscord.client.fetchGuildTextChannel(mainServer,panelState.channelId)
+                if (!channel) continue
+
+                //fetch panel message
+                const message = await opendiscord.client.fetchChannelMessage(channel,panelState.messageId)
+                if (!message || !message.editable || message.flags.has("Ephemeral")) continue
+                
+                const panelMessage = await message.edit((await opendiscord.builders.messages.getSafe("opendiscord:panel").build("auto-update",{guild:mainServer,channel,user:opendiscord.client.client.user,panel})).message)
+                if (panelMessage) await panelMsgState.setMsgState({channel,message:panelMessage},{
+                    messageOrigin:"auto-update",
+                    panelId:panel.id.value,
+                    panelOptionIds:panel.get("opendiscord:options").value,
+                    panelAutoUpdate:true
+                },panelMessage.flags.has("Ephemeral"))
+
                 opendiscord.log("Panel in server got auto-updated!","info",[
-                    {key:"channelid",value:splittedId[0]},
-                    {key:"messageid",value:splittedId[1]},
-                    {key:"panel",value:panelId.value}
+                    {key:"channelid",value:panelState.channelId},
+                    {key:"messageid",value:panelState.messageId},
+                    {key:"panel",value:panel.id.value}
                 ])
-            }catch{}
+            }catch{
+                opendiscord.log("Failed to auto-update panel","error",[
+                    {key:"channelid",value:panelState.channelId},
+                    {key:"messageid",value:panelState.messageId}
+                ])
+            }
         }
     }))
 }

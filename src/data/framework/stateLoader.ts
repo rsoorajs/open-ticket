@@ -5,4 +5,5 @@ export async function loadAllStates(){
 
     opendiscord.states.add(new api.ODInteractiveMessageState("opendiscord:interactive-message",opendiscord.client,stateDatabase))
     opendiscord.states.add(new api.ODClearMessageState("opendiscord:clear-message",opendiscord.client,stateDatabase))
+    opendiscord.states.add(new api.ODPanelMessageState("opendiscord:panel-message",opendiscord.client,stateDatabase))
 }
