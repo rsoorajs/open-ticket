@@ -855,6 +855,9 @@ const ticketEmbeds = () => {
             }else if (mode == "transfer"){
                 instance.setTitle(utilities.emojiTitle("🚨",lang.getTranslation("actions.titles.transfer")))
                 instance.setDescription(lang.getTranslationWithParams("actions.logs.transferDm",[(additionalData instanceof discord.User ? discord.userMention(additionalData.id) : "<unknown>"),(additionalData2 instanceof discord.User ? discord.userMention(additionalData2.id) : "<unknown>")]))
+            }else if (mode == "topic"){
+                instance.setTitle(utilities.emojiTitle("ℹ️",lang.getTranslation("actions.titles.topicSet")))
+                instance.setDescription(lang.getTranslationWithParams("actions.logs.topicSetDm",[(typeof additionalData === "string" ? "`"+additionalData+"`" : "`<unknown>`")]))
             }
         })
     )
@@ -915,6 +918,9 @@ const ticketEmbeds = () => {
             }else if (mode == "transfer"){
                 instance.setTitle(utilities.emojiTitle("🚨",lang.getTranslation("actions.titles.transfer")))
                 instance.setDescription(lang.getTranslationWithParams("actions.logs.transferLog",[(additionalData instanceof discord.User ? discord.userMention(additionalData.id) : "<unknown>"),(additionalData2 instanceof discord.User ? discord.userMention(additionalData2.id) : "<unknown>"),discord.userMention(user.id)]))
+            }else if (mode == "topic"){
+                instance.setTitle(utilities.emojiTitle("ℹ️",lang.getTranslation("actions.titles.topicSet")))
+                instance.setDescription(lang.getTranslationWithParams("actions.logs.topicSetLog",[(typeof additionalData === "string" ? "`"+additionalData+"`" : "`<unknown>`"),discord.userMention(user.id)]))
             }
         })
     )
