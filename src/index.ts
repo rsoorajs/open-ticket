@@ -715,6 +715,7 @@ const main = async () => {
         await (await import("./commands/topic.js")).registerCommandResponders()
         await (await import("./commands/priority.js")).registerCommandResponders()
         await (await import("./commands/transfer.js")).registerCommandResponders()
+        await (await import("./commands/transcripts.js")).registerCommandResponders()
     }
     await opendiscord.events.get("onCommandResponderLoad").emit([opendiscord.responders.commands,opendiscord.responders,opendiscord.actions])
     await opendiscord.events.get("afterCommandRespondersLoaded").emit([opendiscord.responders.commands,opendiscord.responders,opendiscord.actions])

@@ -3,7 +3,7 @@
 ///////////////////////////////////////
 import * as api from "@open-discord-bots/framework/api"
 import { ODPermissionEmbedType } from "./permission.js"
-import { ODTranscriptCompiler, ODTranscriptCompilerCompileResult } from "../api/transcript.js"
+import { ODTranscriptCompiler, ODTranscriptCompilerCompileResult, ODTranscriptHistoryData } from "../api/transcript.js"
 import { ODOption, ODRoleOption, ODSubPanelOption, ODTicketOption, ODWebsiteOption } from "../api/option.js"
 import { ODTicket, ODTicketClearFilter } from "../api/ticket.js"
 import { ODRole, ODRoleUpdateResult } from "../api/role.js"
@@ -125,6 +125,7 @@ export interface ODEmbedManagerIdMappings extends api.ODEmbedManagerIdConstraint
     "opendiscord:transcript-html-ready":{origin:"channel"|"creator-dm"|"participant-dm"|"active-admin-dm"|"every-admin-dm"|"other",params:{guild:discord.Guild,channel:discord.GuildTextBasedChannel,user:discord.User,ticket:ODTicket,compiler:ODTranscriptCompiler<{url:string,availableUntil:Date},{auth:string}>,result:ODTranscriptCompilerCompileResult<{url:string,availableUntil:Date}>},workers:"opendiscord:transcript-html-ready"},
     "opendiscord:transcript-html-progress":{origin:"channel"|"other",params:{guild:discord.Guild,channel:discord.GuildTextBasedChannel,user:discord.User,ticket:ODTicket,compiler:ODTranscriptCompiler<{url:string,availableUntil:Date},{auth:string}>,remaining:number},workers:"opendiscord:transcript-html-progress"},
     "opendiscord:transcript-error":{origin:"slash"|"text"|"ticket-message"|"reopen-message"|"close-message"|"autoclose-message"|"autodelete"|"clear"|"other",params:{guild:discord.Guild,channel:discord.GuildTextBasedChannel,user:discord.User,ticket:ODTicket,compiler:ODTranscriptCompiler<any,object|null>,reason:string|null},workers:"opendiscord:transcript-error"},
+    "opendiscord:transcript-history":{origin:"slash"|"text"|"other",params:{guild:discord.Guild,channel:discord.GuildTextBasedChannel,user:discord.User,transcriptUser:discord.User,transcriptList:ODTranscriptHistoryData[]},workers:"opendiscord:transcript-history"},
 
     "opendiscord:reaction-role":{origin:"panel-button"|"other",params:{guild:discord.Guild,user:discord.User,role:ODRole,result:ODRoleUpdateResult[]},workers:"opendiscord:reaction-role"},
     "opendiscord:reaction-role-dm":{origin:"panel-button"|"other",params:{guild:discord.Guild,user:discord.User,role:ODRole,result:ODRoleUpdateResult[]},workers:"opendiscord:reaction-role-dm"},
@@ -210,6 +211,7 @@ export interface ODMessageManagerIdMappings extends api.ODMessageManagerIdConstr
     "opendiscord:transcript-html-ready":{origin:"channel"|"creator-dm"|"participant-dm"|"active-admin-dm"|"every-admin-dm"|"other",params:{guild:discord.Guild,channel:discord.GuildTextBasedChannel,user:discord.User,ticket:ODTicket,compiler:ODTranscriptCompiler<{url:string,availableUntil:Date},{auth:string}>,result:ODTranscriptCompilerCompileResult<{url:string,availableUntil:Date}>},workers:"opendiscord:transcript-html-ready"},
     "opendiscord:transcript-html-progress":{origin:"channel"|"other",params:{guild:discord.Guild,channel:discord.GuildTextBasedChannel,user:discord.User,ticket:ODTicket,compiler:ODTranscriptCompiler<{url:string,availableUntil:Date},{auth:string}>,remaining:number},workers:"opendiscord:transcript-html-progress"},
     "opendiscord:transcript-error":{origin:"slash"|"text"|"ticket-message"|"reopen-message"|"close-message"|"autoclose-message"|"autodelete"|"clear"|"other",params:{guild:discord.Guild,channel:discord.GuildTextBasedChannel,user:discord.User,ticket:ODTicket,compiler:ODTranscriptCompiler<any,object|null>,reason:string|null},workers:"opendiscord:transcript-error"},
+    "opendiscord:transcript-history":{origin:"slash"|"text"|"other",params:{guild:discord.Guild,channel:discord.GuildTextBasedChannel,user:discord.User,transcriptUser:discord.User,transcriptList:ODTranscriptHistoryData[]},workers:"opendiscord:transcript-history"},
 
     "opendiscord:reaction-role":{origin:"panel-button"|"other",params:{guild:discord.Guild,user:discord.User,role:ODRole,result:ODRoleUpdateResult[]},workers:"opendiscord:reaction-role"},
     "opendiscord:reaction-role-dm":{origin:"panel-button"|"other",params:{guild:discord.Guild,user:discord.User,role:ODRole,result:ODRoleUpdateResult[]},workers:"opendiscord:reaction-role-dm"},

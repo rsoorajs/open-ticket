@@ -4,6 +4,7 @@
 import * as api from "@open-discord-bots/framework/api"
 import { ODTicketJson } from "../api/ticket.js"
 import { ODOptionJson } from "../api/option.js"
+import { ODTranscriptHistoryData } from "../api/transcript.js"
 
 /**## ODDatabaseManagerIdMappings `interface`
  * A list of all available IDs in the default `ODDatabaseManager` class in `opendiscord`.
@@ -15,6 +16,7 @@ export interface ODDatabaseManagerIdMappings extends api.ODDatabaseManagerIdCons
     "opendiscord:tickets":ODTicketsDatabase,
     "opendiscord:users":ODUsersDatabase,
     "opendiscord:options":ODOptionsDatabase,
+    "opendiscord:transcripts":ODTranscriptsDatabase,
     "opendiscord:message-states":ODMessageStatesDatabase,
 }
 
@@ -58,6 +60,15 @@ export interface ODOptionsDatabaseIdMappings extends api.ODDatabaseIdConstraint 
     "opendiscord:used-option":ODOptionJson
 }
 
+/**## ODTranscriptsDatabaseIdMappings `interface`
+ * A list of all available IDs in the default `ODTranscriptsDatabase` class in `opendiscord`.
+ * It's used to generate typescript declarations for this class.
+ */
+export interface ODTranscriptsDatabaseIdMappings extends api.ODDatabaseIdConstraint {
+    "opendiscord:transcript":ODTranscriptHistoryData,
+}
+
+
 /////////////////////////////
 ////// MAPPED MANAGERS //////
 /////////////////////////////
@@ -91,6 +102,11 @@ export class ODUsersDatabase extends api.ODFormattedJsonDatabase<ODUsersDatabase
  * A special class with types for the Open Ticket `database/options.json` database file
  */
 export class ODOptionsDatabase extends api.ODFormattedJsonDatabase<ODOptionsDatabaseIdMappings> {}
+
+/**## ODTranscriptsDatabase `class
+ * A special class with types for the Open Ticket `database/transcripts.json` database file
+ */
+export class ODTranscriptsDatabase extends api.ODFormattedJsonDatabase<ODTranscriptsDatabaseIdMappings> {}
 
 /**## ODMessageStatesDatabase `class
  * A special class with types for the Open Ticket `database/states.json` database file

@@ -677,6 +677,16 @@ const transcriptMessages = () => {
             instance.addComponent(await buttons.getSafe("opendiscord:transcript-error-continue").build(origin,{guild,channel,user,ticket,compiler,reason}))
         })
     )
+
+    //TRANSCRIPT HISTORY
+    messages.add(new api.ODMessage("opendiscord:transcript-history"))
+    messages.get("opendiscord:transcript-history").workers.add(
+        new api.ODWorker("opendiscord:transcript-history",0,async (instance,params,origin) => {
+            const {guild,channel,user,transcriptUser,transcriptList} = params
+            instance.addEmbed(await embeds.getSafe("opendiscord:transcript-history").build(origin,{guild,channel,user,transcriptUser,transcriptList}))
+            instance.setEphemeral(true)
+        })
+    )
 }
 
 const roleMessages = () => {

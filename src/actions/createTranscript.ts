@@ -5,6 +5,7 @@ import {opendiscord, api, utilities, openticketUtils} from "../index.js"
 import * as discord from "discord.js"
 
 const transcriptConfig = opendiscord.configs.get("opendiscord:transcripts")
+const transcriptDatabase = opendiscord.databases.get("opendiscord:transcripts")
 
 export async function registerActions(){
     opendiscord.actions.add(new api.ODAction("opendiscord:create-transcript"))
@@ -127,11 +128,24 @@ export async function registerActions(){
                     cancel()
                     throw new api.ODSystemError("ODAction(ot:create-transcript):ODWorker(ot:ready-transcript) => Instance is missing transcript result! (2)")
                 }
+                const result = instance.result as api.ODTranscriptCompilerCompileResult<{url:string,availableUntil:Date}|{contents:string}>
 
-                await opendiscord.events.get("onTranscriptReady").emit([opendiscord.transcripts,instance.result.ticket,instance.result.channel,instance.result.user])
+                const historyData: api.ODTranscriptHistoryData = {
+                    ticketId:result.channel.id,
+                    ticketName:"#"+result.channel.name,
+                    ticketCreatorId:result.user.id,
+                    ticketCreatedDate:result.ticket.get("opendiscord:opened-on").value,
+                    ticketDeletedDate:Date.now(),
+                    transcriptType:(result.data && "contents" in result.data) ? "localContents" : "remoteUrl",
+                    transcriptContents:(result.data && "contents" in result.data) ? result.data.contents : null,
+                    transcriptUrl:(result.data && "url" in result.data) ? result.data.url : null,
+                }
+                transcriptDatabase.set("opendiscord:transcript","C:"+result.channel.id+",U:"+result.user.id,historyData)
+
+                await opendiscord.events.get("onTranscriptReady").emit([opendiscord.transcripts,result.ticket,result.channel,result.user])
                 if (instance.compiler.ready){
                     try{
-                        const {channelMessage,creatorDmMessage,participantDmMessage,activeAdminDmMessage,everyAdminDmMessage} = await instance.compiler.ready(instance.result)
+                        const {channelMessage,creatorDmMessage,participantDmMessage,activeAdminDmMessage,everyAdminDmMessage} = await instance.compiler.ready(result)
                         
                         //send channel message
                         if (transcriptConfig.data.general.enableChannel && channelMessage){
@@ -154,7 +168,7 @@ export async function registerActions(){
                                 }else if (p.role == "participant" && transcriptConfig.data.general.enableParticipantDM && participantDmMessage){
                                     //send participant dm message
                                     await opendiscord.client.sendUserDm(p.user,participantDmMessage)
-                                }else if (p.role == "admin" && transcriptConfig.data.general.enableActiveAdminDM && instance.result.success && instance.result.messages && instance.result.messages.some((msg) => msg.author.id == p.user.id) && activeAdminDmMessage){
+                                }else if (p.role == "admin" && transcriptConfig.data.general.enableActiveAdminDM && result.success && result.messages && result.messages.some((msg) => msg.author.id == p.user.id) && activeAdminDmMessage){
                                     //send active admin dm message
                                     await opendiscord.client.sendUserDm(p.user,activeAdminDmMessage)
                                 }else if (p.role == "admin" && transcriptConfig.data.general.enableEveryAdminDM && everyAdminDmMessage){
@@ -171,7 +185,7 @@ export async function registerActions(){
                         throw new api.ODSystemError("ODAction(ot:create-transcript) => Failed transcript compiler ready()! (see error above)")
                     }
                 }
-                await opendiscord.events.get("afterTranscriptReady").emit([opendiscord.transcripts,instance.result.ticket,instance.result.channel,instance.result.user])
+                await opendiscord.events.get("afterTranscriptReady").emit([opendiscord.transcripts,result.ticket,result.channel,result.user])
             })
 
             //update stats

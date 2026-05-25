@@ -60,6 +60,20 @@ export class ODTranscriptManager<IdList extends ODTranscriptManagerIdConstraint 
     }
 }
 
+/**## ODTranscriptHistoryData `interface`
+ * The transcript data stored in the transcripts database of deleted tickets.
+ */
+export interface ODTranscriptHistoryData {
+    ticketId:string,
+    ticketName:string,
+    ticketCreatorId:string,
+    ticketCreatedDate:number|null,
+    ticketDeletedDate:number|null,
+    transcriptType:"localContents"|"remoteUrl",
+    transcriptContents:string|null,
+    transcriptUrl:string|null,
+}
+
 /**## ODMappedTranscriptManager `class
  * A special class with types for the Open Ticket `ODTranscriptManager` class.
  */

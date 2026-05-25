@@ -10,6 +10,7 @@ export async function loadAllDatabases(){
     opendiscord.databases.add(defaultTicketsDatabase)
     opendiscord.databases.add(defaultUsersDatabase)
     opendiscord.databases.add(defaultOptionsDatabase)
+    opendiscord.databases.add(defaultTranscriptsDatabase)
     opendiscord.databases.add(defaultMessageStatesDatabase)
 }
 
@@ -52,4 +53,5 @@ export const defaultStatsDatabase = new api.ODStatsDatabase("opendiscord:stats",
 export const defaultTicketsDatabase = new api.ODTicketsDatabase("opendiscord:tickets","tickets.json",defaultTicketFormatter,(isDevdatabase) ? "./devdatabase/" : "./database/")
 export const defaultUsersDatabase = new api.ODUsersDatabase("opendiscord:users","users.json",defaultInlineFormatter,(isDevdatabase) ? "./devdatabase/" : "./database/")
 export const defaultOptionsDatabase = new api.ODOptionsDatabase("opendiscord:options","options.json",defaultOptionFormatter,(isDevdatabase) ? "./devdatabase/" : "./database/")
+export const defaultTranscriptsDatabase = new api.ODTranscriptsDatabase("opendiscord:transcripts","transcripts.json",defaultInlineFormatter,(isDevdatabase) ? "./devdatabase/" : "./database/")
 export const defaultMessageStatesDatabase = new api.ODMessageStatesDatabase("opendiscord:message-states","states.json",defaultInlineFormatter,(isDevdatabase) ? "./devdatabase/" : "./database/")

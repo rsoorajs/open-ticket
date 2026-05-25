@@ -90,6 +90,7 @@ export interface ODAdvancedHelpMenuCategoryIdMappings extends api.ODHelpMenuCate
     "opendiscord:autodelete-enable":api.ODHelpMenuCommandComponent,
     "opendiscord:topic-set":api.ODHelpMenuCommandComponent,
     "opendiscord:priority-set":api.ODHelpMenuCommandComponent,
+    "opendiscord:transcripts":api.ODHelpMenuCommandComponent,
 }
 
 /**## ODExtraHelpMenuCategoryIdMappings `interface`

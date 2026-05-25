@@ -15,6 +15,7 @@ export interface ODTaskManagerIdMappings extends api.ODTaskManagerIdConstraint {
     "opendiscord:option-database-cleaner":api.ODTask,
     "opendiscord:user-database-cleaner":api.ODTask,
     "opendiscord:ticket-database-cleaner":api.ODTask,
+    "opendiscord:transcript-database-cleaner":api.ODTask,
     "opendiscord:panel-auto-update":api.ODTask,
     "opendiscord:ticket-saver":api.ODTask,
     "opendiscord:blacklist-saver":api.ODTask,

@@ -283,5 +283,13 @@ export async function loadAllHelpMenuComponents(){
             textOptions:[{name:"priority",optional:false},{name:"reason",optional:true}],
             slashOptions:[{name:"priority",optional:false},{name:"reason",optional:true}]
         }))
+        if (allowedCommands.includes("transcripts")) advanced.add(new api.ODHelpMenuCommandComponent("opendiscord:transcripts",0,{
+            textName:prefix+"transcripts",
+            textDescription:"View ticket transcript history of a user.", //TODO TRANSLATION!!!
+            slashName:"/transcripts",
+            slashDescription:"View ticket transcript history of a user.", //TODO TRANSLATION!!!
+            textOptions:[{name:"user",optional:false}],
+            slashOptions:[{name:"user",optional:false}]
+        }))
     }
 }

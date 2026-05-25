@@ -637,6 +637,25 @@ export async function loadAllSlashCommands(){
             }
         ]
     }))
+
+    //TRANSCRIPTS
+    if (allowedCommands.includes("transcripts")) commands.add(new api.ODSlashCommand("opendiscord:transcripts",{
+        type:act.ChatInput,
+        name:"transcripts",
+        //TODO TRANSLATION!!!
+        description:"View ticket transcript history of a user.",
+        contexts:[discord.InteractionContextType.Guild],
+        integrationTypes:[discord.ApplicationIntegrationType.GuildInstall],
+        options:[
+            {
+                name:"user",
+                //TODO TRANSLATION!!!
+                description:"The user to view.",
+                type:acot.User,
+                required:true
+            }
+        ]
+    }))
 }
 
 export async function loadAllTextCommands(){
@@ -1208,6 +1227,22 @@ export async function loadAllTextCommands(){
                 type:"string",
                 required:false,
                 allowSpaces:true
+            }
+        ]
+    }))
+
+    //TRANSCRIPTS
+    if (allowedCommands.includes("transcripts")) commands.add(new api.ODTextCommand("opendiscord:transcripts",{
+        name:"transcripts",
+        prefix,
+        dmPermission:false,
+        guildPermission:true,
+        allowBots:false,
+        options:[
+            {
+                name:"user",
+                type:"user",
+                required:true
             }
         ]
     }))

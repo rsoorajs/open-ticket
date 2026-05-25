@@ -30,6 +30,7 @@ export interface ODCommandResponderManagerIdMappings extends api.ODCommandRespon
     "opendiscord:topic":{origin:"slash"|"text",params:{},workers:"opendiscord:topic"|"opendiscord:logs"},
     "opendiscord:priority":{origin:"slash"|"text",params:{},workers:"opendiscord:priority"|"opendiscord:logs"},
     "opendiscord:transfer":{origin:"slash"|"text",params:{},workers:"opendiscord:transfer"|"opendiscord:logs"},
+    "opendiscord:transcripts":{origin:"slash"|"text",params:{},workers:"opendiscord:transcripts"|"opendiscord:logs"},
 
     "opendiscord:autoclose":{origin:"slash"|"text",params:{},workers:"opendiscord:autoclose"|"opendiscord:logs"},
     "opendiscord:autodelete":{origin:"slash"|"text",params:{},workers:"opendiscord:autodelete"|"opendiscord:logs"},

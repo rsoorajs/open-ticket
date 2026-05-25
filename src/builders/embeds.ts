@@ -1131,6 +1131,27 @@ const transcriptEmbeds = () => {
             if (reason || generalConfig.data.ticketSystem.alwaysShowReason) instance.addFields({name:lang.getTranslation("params.uppercase.reason")+":",value:"```"+(reason ?? "/")+"```"})
         })
     )
+
+    //TRANSCRIPT HISTORY
+    embeds.add(new api.ODEmbed("opendiscord:transcript-history"))
+    embeds.get("opendiscord:transcript-history").workers.add(
+        new api.ODWorker("opendiscord:transcript-history",0,async (instance,params,origin) => {
+            const {transcriptUser,transcriptList} = params
+
+            //transcript history only supports URL (html) transcripts at the moment
+            const filteredList = transcriptList.filter((t) => t.transcriptType == "remoteUrl")
+            const renderedList = filteredList.map((t) => "- ["+t.ticketName+"]("+t.transcriptUrl+") ("+discord.time(new Date(t.ticketDeletedDate ?? 0),"R")+")").join("\n")
+            //TODO TRANSLATION!!!
+            const contents = (transcriptList.length < 1) ? "This user does not yet have any transcripts." : ((filteredList.length > 0) ? renderedList : "*⚠️ Transcript history is currently only supported with HTML Transcripts.\nText transcript history will be available soon.*")
+
+            instance.setAuthor(transcriptUser.displayName,transcriptUser.displayAvatarURL())
+            instance.setThumbnail(transcriptUser.displayAvatarURL())
+            instance.setColor(generalConfig.data.mainColor)
+            //TODO TRANSLATION!!!
+            instance.setTitle(utilities.emojiTitle("📄","Transcript History"))
+            instance.setDescription(contents)
+        })
+    )
 }
 
 const roleEmbeds = () => {

@@ -30,6 +30,7 @@ export interface ODSlashCommandManagerIdMappings extends api.ODSlashCommandManag
     "opendiscord:topic":api.ODSlashCommand,
     "opendiscord:priority":api.ODSlashCommand,
     "opendiscord:transfer":api.ODSlashCommand,
+    "opendiscord:transcripts":api.ODSlashCommand,
 }
 
 /**## ODTextCommandManagerIdMappings `interface`
@@ -68,6 +69,7 @@ export interface ODTextCommandManagerIdMappings extends api.ODTextCommandManager
     "opendiscord:priority-set":api.ODTextCommand,
     "opendiscord:priority-get":api.ODTextCommand,
     "opendiscord:transfer":api.ODTextCommand,
+    "opendiscord:transcripts":api.ODTextCommand,
 }
 
 /**## ODContextMenuManagerIdMappings `interface`

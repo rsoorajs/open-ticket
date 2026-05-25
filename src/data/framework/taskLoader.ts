@@ -7,6 +7,7 @@ const userDatabase = opendiscord.databases.get("opendiscord:users")
 const ticketDatabase = opendiscord.databases.get("opendiscord:tickets")
 const statsDatabase = opendiscord.databases.get("opendiscord:stats")
 const optionDatabase = opendiscord.databases.get("opendiscord:options")
+const transcriptsDatabase = opendiscord.databases.get("opendiscord:transcripts")
 const mainServer = opendiscord.client.mainServer
 
 export async function loadAllTasks(){
@@ -247,6 +248,18 @@ export async function loadDatabaseCleanersTasks(){
                 }
             }
         })
+    }))
+
+    //TRANSCRIPT DATABASE CLEANER
+    opendiscord.tasks.add(new api.ODTask("opendiscord:transcript-database-cleaner",8,async () => {
+        //preserve max 20 transcripts per user (async)
+        const userCount: Map<string,number> = new Map()
+        for (const {key,value:transcript} of (await transcriptsDatabase.getCategory("opendiscord:transcript") ?? []).sort((a,b) => (b.value.ticketDeletedDate ?? 0)-(a.value.ticketDeletedDate ?? 0))){
+            const currentAmount = userCount.get(transcript.ticketCreatorId) ?? 0
+            userCount.set(transcript.ticketCreatorId,currentAmount+1)
+            
+            if (currentAmount > 20) transcriptsDatabase.delete("opendiscord:transcript",key)
+        }
     }))
 }
 
