@@ -52,6 +52,8 @@ export async function registerActions(){
         }),
         new api.ODWorker("opendiscord:discord-logs",1,async (instance,params,origin,cancel) => {
             const {guild,channel,user,ticket,newTopic} = params
+
+            if (!newTopic) return //only log when topic actually changed
                        
             //to logs
             if (generalConfig.data.logs.enabled && generalConfig.data.logs.logMessages.topicChange.logs){
