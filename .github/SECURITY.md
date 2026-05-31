@@ -20,7 +20,8 @@ This list will be updated on every release.
 | Version    | Supported | Notes                                                         |
 |------------|-----------|---------------------------------------------------------------|
 | 4.2.x      | 🟦        | In Development                                                |
-| 4.2.1      | 🟦        | In Development                                                |
+| 4.2.2      | 🟦        | In Development                                                |
+| 4.2.1      | ✅        |                                                               |
 | 4.2.0      | ✅        |                                                               |
 | 4.1.3      | ✅        | (LTS) Long-Term-Support, Until September 2026                 |
 | 4.1.2      | 🚧        |                                                               |

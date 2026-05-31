@@ -418,4 +418,7 @@ export const migrations = [
             })
         }
     }),
+
+    //MIGRATE TO v4.2.1
+    new api.ODVersionMigration(api.ODVersion.fromString("opendiscord:version","v4.2.1"),{}),
 ]
