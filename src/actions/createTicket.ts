@@ -194,8 +194,18 @@ export async function registerActions(){
                 //pin ticket message (if required)
                 if (generalConfig.data.ticketSystem.pinFirstTicketMessage && ticketMsg.pinnable) await ticketMsg.pin("Ticket Message")
                 
+                //send modal file upload answers in separate message to prevent deletion after 72h
+                const attachments = answers
+                    .filter((answer) => answer.type == "file-upload")
+                    .map((answer) => answer.files).flat()
+                    .map((file) => new discord.AttachmentBuilder(file.url,{
+                        name:file.name,
+                        description:file.description ?? undefined
+                    }))
+                if (attachments.length > 0) await channel.send({files:attachments})
+                
                 //manage stats
-                await opendiscord.statistics.get("opendiscord:ticket").setStat("opendiscord:messages-sent",ticket.id.value,1,"increase")
+                await opendiscord.statistics.get("opendiscord:ticket").setStat("opendiscord:messages-sent",ticket.id.value,2,"increase")
                 
                 await opendiscord.events.get("afterTicketMainMessageCreated").emit([ticket,ticketMsg,channel,user])
         }catch(err){
